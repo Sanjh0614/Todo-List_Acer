@@ -241,3 +241,255 @@ textarea { resize: vertical; min-height: 80px; }
 .toast-success { border-left-color: var(--color-success); }
 .toast-error { border-left-color: var(--color-danger); }
 .toast-warning { border-left-color: #F59E0B; }
+
+/* ─── Extra design tokens ──────────────────────────────────────── */
+:root {
+  --color-surface-2: #263045;
+  --color-surface-3: #334155;
+  --color-warning: #f59e0b;
+  --color-primary-glow: rgba(99,102,241,0.25);
+}
+
+/* ─── Spinner ──────────────────────────────────────────────────── */
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--color-surface-3);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.spinner-sm {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white; border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Error banner ─────────────────────────────────────────────── */
+.error-banner {
+  background: rgba(239,68,68,0.12); border: 1px solid var(--color-danger);
+  color: var(--color-danger); border-radius: var(--radius);
+  padding: var(--space-3) var(--space-4); margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+/* ─── Skeleton loaders ─────────────────────────────────────────── */
+.skeleton-list { display: flex; flex-direction: column; gap: 12px; }
+.skeleton-item {
+  height: 56px; border-radius: var(--radius);
+  background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-2) 50%, var(--color-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+.skeleton-item.tall { height: 90px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ─── Empty state ──────────────────────────────────────────────── */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: var(--space-8);
+  color: var(--color-text-muted); text-align: center; gap: var(--space-3);
+}
+.empty-state span { font-size: 2.5rem; }
+.empty-state.large { min-height: 200px; }
+
+/* ─── Risk badge ───────────────────────────────────────────────── */
+.risk-badge {
+  font-size: 0.7rem; font-weight: 600; padding: 2px 8px;
+  border-radius: 999px; white-space: nowrap;
+}
+.risk-badge.risk-high   { background: rgba(239,68,68,0.15);   color: #ef4444; border: 1px solid rgba(239,68,68,0.4); }
+.risk-badge.risk-medium { background: rgba(245,158,11,0.15);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.4); }
+.risk-badge.risk-low    { background: rgba(16,185,129,0.15);  color: #10b981; border: 1px solid rgba(16,185,129,0.4); }
+
+/* ─── Type badge ───────────────────────────────────────────────── */
+.type-badge {
+  font-size: 0.68rem; padding: 1px 6px; border-radius: 4px;
+  background: var(--color-surface-2); color: var(--color-text-muted);
+  text-transform: capitalize; border: 1px solid var(--color-border);
+}
+
+/* ─── Priority bar ─────────────────────────────────────────────── */
+.priority-bar-wrap {
+  height: 4px; border-radius: 99px;
+  background: var(--color-surface-3); overflow: hidden; flex: 1;
+}
+.priority-bar {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  transition: width 0.4s ease;
+}
+
+/* ─── Commitment list (Dashboard sidebar) ──────────────────────── */
+.commitment-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.commitment-item {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 10px; padding: var(--space-3);
+  background: var(--color-surface-2); border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  transition: border-color 0.2s;
+}
+.commitment-item:hover { border-color: var(--color-primary); }
+.commitment-main { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.commitment-title { font-weight: 500; font-size: var(--text-sm); }
+.commitment-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.commitment-actions { display: flex; flex-direction: column; gap: 4px; }
+
+/* ─── Reminder list ────────────────────────────────────────────── */
+.reminder-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.reminder-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: var(--space-3); background: var(--color-surface-2);
+  border-radius: var(--radius); border: 1px solid var(--color-border);
+}
+.reminder-style-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px;
+  background: var(--color-primary);
+}
+.reminder-message { font-size: var(--text-sm); margin: 0; }
+
+/* ─── Dashboard stat card extras ───────────────────────────────── */
+.stat-icon { font-size: 1.4rem; margin-bottom: var(--space-2); }
+.stat-sub { font-size: 0.7rem; color: var(--color-text-muted); margin-top: 2px; }
+
+/* ─── Modal (new style) ────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px); display: flex;
+  align-items: center; justify-content: center; z-index: 200;
+}
+.modal-box {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-6);
+  width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: var(--space-6);
+}
+.modal-header h3 { margin: 0; }
+.modal-close { background: none; border: none; color: var(--color-text-muted); cursor: pointer; font-size: 1.2rem; padding: 4px; border-radius: 4px; }
+.modal-close:hover { color: var(--color-text); background: var(--color-surface-2); }
+.modal-form label { display: flex; flex-direction: column; gap: 6px; font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-3); }
+.modal-form label input, .modal-form label select, .modal-form label textarea { margin-bottom: 0; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: var(--space-4); }
+
+/* ─── Commitments page grid ────────────────────────────────────── */
+.commitments-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+.commitment-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-4);
+  display: flex; flex-direction: column; gap: var(--space-3);
+  transition: border-color 0.2s, transform 0.2s;
+}
+.commitment-card:hover { border-color: var(--color-primary); transform: translateY(-2px); }
+.commitment-card-header { display: flex; align-items: center; gap: 10px; }
+.commitment-card-title { font-weight: 600; flex: 1; }
+.commitment-card-desc { font-size: var(--text-sm); -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+.commitment-card-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; }
+.commitment-card-actions { display: flex; gap: 6px; }
+.btn-sm { padding: 4px 10px; font-size: 0.75rem; }
+
+/* ─── Search + filter toolbar ──────────────────────────────────── */
+.search-input {
+  padding: var(--space-2) var(--space-3); border-radius: var(--radius);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  color: var(--color-text); font-family: var(--font-sans);
+  min-width: 220px; margin: 0;
+}
+.search-input:focus { outline: none; border-color: var(--color-primary); }
+.filter-tabs { display: flex; gap: 6px; }
+.filter-btn {
+  padding: 4px 12px; border-radius: 999px; border: 1px solid var(--color-border);
+  background: transparent; color: var(--color-text-muted); cursor: pointer;
+  font-family: var(--font-sans); font-size: var(--text-sm); transition: all 0.2s;
+}
+.filter-btn.active, .filter-btn:hover { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+
+/* ─── Panel (AI ingest / manual form) ─────────────────────────── */
+.panel {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+.ai-input {
+  width: 100%; background: var(--color-bg); border: 1px solid var(--color-border);
+  color: var(--color-text); padding: var(--space-3); border-radius: var(--radius);
+  font-family: var(--font-sans); font-size: var(--text-sm); resize: vertical;
+  margin-bottom: var(--space-3); min-height: 120px;
+}
+
+/* ─── Focus page SVG timer text ────────────────────────────────── */
+.timer-mode-text  { font-size: 0.9rem; fill: var(--color-primary); font-family: var(--font-sans); transform: rotate(90deg); transform-origin: center; }
+.timer-time-text  { font-size: 2.4rem; fill: var(--color-text); font-weight: 700; font-family: var(--font-sans); font-variant-numeric: tabular-nums; transform: rotate(90deg); transform-origin: center; }
+.timer-session-text { font-size: 0.75rem; fill: var(--color-text-muted); font-family: var(--font-sans); transform: rotate(90deg); transform-origin: center; }
+.timer-svg { display: block; margin: auto; }
+.focus-status {
+  margin-top: var(--space-4); font-size: var(--text-sm);
+  color: var(--color-text-muted); text-align: center;
+  padding: var(--space-2) var(--space-4); background: var(--color-surface-2);
+  border-radius: var(--radius);
+}
+
+/* ─── Focus sidebar panels ─────────────────────────────────────── */
+.recommendation-card {
+  background: var(--color-surface); border: 1px solid rgba(99,102,241,0.4);
+  border-radius: var(--radius-lg); padding: var(--space-4);
+  box-shadow: 0 0 20px var(--color-primary-glow);
+}
+.recommendation-card h4 { margin-bottom: var(--space-2); color: var(--color-primary); }
+.rec-task { font-weight: 600; margin-bottom: 4px; }
+.rec-commitment { font-size: var(--text-sm); margin-bottom: 0; }
+
+.task-picker {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-4); flex: 1;
+}
+.task-pick-list { list-style: none; display: flex; flex-direction: column; gap: 6px; max-height: 300px; overflow-y: auto; }
+.task-pick-item {
+  padding: var(--space-2) var(--space-3); border-radius: var(--radius);
+  cursor: pointer; border: 1px solid transparent;
+  transition: all 0.15s;
+}
+.task-pick-item:hover { background: var(--color-surface-2); border-color: var(--color-border); }
+.task-pick-item.selected { background: var(--color-primary-glow); border-color: var(--color-primary); }
+.task-pick-title { font-size: var(--text-sm); font-weight: 500; display: block; }
+.task-pick-commitment { font-size: 0.7rem; display: block; }
+.selected-task-bar {
+  margin-top: var(--space-3); padding: var(--space-2) var(--space-3);
+  background: var(--color-primary-glow); border: 1px solid var(--color-primary);
+  border-radius: var(--radius); font-size: var(--text-sm);
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+/* ─── Analytics charts ─────────────────────────────────────────── */
+.charts-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6); margin-top: var(--space-6);
+}
+.chart-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-6);
+}
+.chart-card h3 { margin-bottom: var(--space-4); }
+.chart-wrap { position: relative; }
+
+/* ─── Login page extras ────────────────────────────────────────── */
+.login-logo { margin-bottom: var(--space-4); }
+.login-container h1 { margin-bottom: var(--space-3); }
+
+/* ─── Nav active state ─────────────────────────────────────────── */
+.nav-links a.active { background: var(--color-surface-2); color: var(--color-text); font-weight: 500; border-left: 3px solid var(--color-primary); }
+
+/* ─── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .focus-layout { flex-direction: column; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .commitments-grid { grid-template-columns: 1fr; }
+}

@@ -1,6 +1,7 @@
 fastapi
 uvicorn[standard]
 sqlalchemy
+psycopg2-binary
 pydantic
 pydantic-settings
 python-jose[cryptography]
@@ -12,3 +13,4 @@ redis
 loguru
 tenacity
 python-multipart
+alembic
