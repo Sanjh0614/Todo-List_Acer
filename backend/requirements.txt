@@ -1,5 +1,9 @@
 fastapi
 uvicorn
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+pydantic
 pydantic-settings
 sqlalchemy
 loguru
@@ -11,3 +15,5 @@ redis
 openai
 tenacity
 requests
+python-multipart
+alembic
