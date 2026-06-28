@@ -1,13 +1,13 @@
 import json
 from app.ai.prompts.prompt_loader import load_prompt
-from app.services.gemini_client import GeminiClient
+from app.services.hybrid_client import HybridClient
 from app.services.parser import Parser
 from app.schemas.ai import CommitmentOutput
 from app.ai.graph.state import AIState
 
 class CommitmentAgent:
     def __init__(self):
-        self.llm = GeminiClient()
+        self.llm = HybridClient()
         self.system_prompt = load_prompt("commitment")
 
     def execute(self, state: AIState) -> dict:

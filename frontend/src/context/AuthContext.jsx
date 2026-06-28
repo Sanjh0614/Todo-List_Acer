@@ -13,9 +13,16 @@ export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Rehydrate on mount if a token exists in localStorage
+  // Rehydrate on mount if a token exists in localStorage or URL
   useEffect(() => {
     const init = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlToken = urlParams.get('token');
+      if (urlToken) {
+        setToken(urlToken);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
       if (getToken()) {
         try {
           const me = await getMe();

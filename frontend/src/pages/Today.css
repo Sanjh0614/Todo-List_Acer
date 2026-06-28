@@ -1,0 +1,388 @@
+/* Today.css - Specific styles for the Rituals & Board layout */
+
+.today-page {
+  display: flex;
+  height: 100%;
+  gap: var(--space-6);
+}
+
+/* Sidebar */
+.rituals-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--color-border);
+  padding-right: var(--space-4);
+}
+
+.rituals-sidebar h3 {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-4);
+}
+
+.rituals-list {
+  list-style: none;
+}
+
+.rituals-list li {
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: var(--radius);
+  margin-bottom: var(--space-1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rituals-list li:hover {
+  background: var(--color-surface);
+}
+
+.rituals-list li.active {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.filter-dropdown label {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.filter-dropdown select {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: var(--space-2);
+  border-radius: var(--radius);
+  width: 100%;
+}
+
+/* Board Area */
+.board-area {
+  flex: 1;
+  overflow-x: auto;
+  padding-right: var(--space-4);
+}
+
+.board-grid {
+  display: flex;
+  gap: var(--space-6);
+  height: 100%;
+}
+
+.board-column {
+  min-width: 280px;
+  max-width: 320px;
+  flex: 1;
+}
+
+.col-header {
+  margin-bottom: var(--space-4);
+}
+
+.col-header h4 {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+.col-header .muted {
+  font-size: var(--text-sm);
+}
+
+.tasks-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.board-task-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.board-task-card:hover {
+  border-color: var(--color-primary);
+}
+
+.task-info p {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.channel-tag {
+  font-size: 10px;
+  color: var(--color-primary);
+  font-weight: 600;
+  align-self: flex-end;
+  margin-top: var(--space-2);
+}
+
+.add-task-btn {
+  width: 100%;
+  text-align: left;
+  justify-content: flex-start;
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+}
+.add-task-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Calendar Area */
+.calendar-area {
+  width: 250px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--color-border);
+  padding-left: var(--space-4);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-area.expanded {
+  width: 400px;
+}
+
+.calendar-area.full-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  border-left: none;
+  padding: var(--space-8);
+}
+
+.cal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-6);
+}
+
+.cal-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cal-date .day {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.cal-date .date {
+  font-size: var(--text-xl);
+  font-weight: 600;
+}
+
+.cal-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.cal-row {
+  display: flex;
+  height: 60px;
+  border-top: 1px solid var(--color-border);
+  position: relative;
+}
+
+.cal-row .time {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  width: 40px;
+  position: absolute;
+  top: -8px;
+  background: var(--color-bg);
+  padding-right: 4px;
+}
+
+.cal-slot {
+  flex: 1;
+  margin-left: 40px;
+  border-left: 1px solid var(--color-border);
+}
+
+/* Rituals Views */
+.shutdown-view, .highlights-view {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-top: var(--space-8);
+}
+
+.highlight-item {
+  margin-bottom: var(--space-8);
+}
+
+.highlight-item h4 {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.highlight-item p {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* Full Month View Styles */
+.month-view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.month-header-nav {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: var(--space-6);
+}
+
+.month-header-nav h2 {
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  margin: 0;
+  margin-left: var(--space-4);
+  color: var(--color-text);
+}
+
+.month-grid-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(100px, 1fr);
+  flex: 1;
+  border-left: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.month-grid-cell {
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--color-surface);
+}
+
+.month-grid-cell.empty {
+  background: var(--color-bg);
+}
+
+.month-grid-cell .cell-date {
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-bottom: 4px;
+  margin-top: 4px;
+}
+
+.month-grid-cell.today .date-badge {
+  background: var(--color-primary);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+.cell-events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  max-height: calc(100% - 24px);
+}
+
+.month-event-chip {
+  background: var(--color-bg);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.month-event-chip.all-day {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.month-evt-dot {
+  color: var(--color-primary);
+  font-size: 8px;
+}
+
+.month-evt-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Task Modal */
+.task-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.task-modal-content {
+  background: var(--color-bg);
+  padding: var(--space-6);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  border: 1px solid var(--color-border);
+}
+
+.task-modal-content .add-task-bar {
+  margin: 0; /* Override any layout margins from the add task bar */
+}

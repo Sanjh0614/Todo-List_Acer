@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
     GOOGLE_REDIRECT_URI: str = "http://localhost:8000/auth/callback"
+    FRONTEND_URL: str = "http://localhost:5173"
     SECRET_KEY: str = "dev-secret-key-change-in-production-min-32-chars"
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
@@ -33,7 +34,8 @@ class Settings(BaseSettings):
 @lru_cache()
 def get_settings() -> Settings:
     settings = Settings()
-    print(f"GEMINI_API_KEY: {settings.GEMINI_API_KEY}")
+
     return settings
 
 settings = get_settings()
+# Force reload

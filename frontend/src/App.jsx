@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Today from './pages/Today';
 import Commitments from './pages/Commitments';
 import Focus from './pages/Focus';
 import Analytics from './pages/Analytics';
@@ -25,6 +26,7 @@ function AppRoutes() {
       <Route path="/" element={<Layout user={user} onLogout={logout} />}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard"   element={<Dashboard />} />
+        <Route path="today"       element={<Today />} />
         <Route path="commitments" element={<Commitments />} />
         <Route path="focus"       element={<Focus />} />
         <Route path="analytics"   element={<Analytics />} />
@@ -33,10 +35,14 @@ function AppRoutes() {
   );
 }
 
+import { StatsProvider } from './context/StatsContext';
+
 function App() {
   return (
     <AuthProvider>
-      <AppRoutes />
+      <StatsProvider>
+        <AppRoutes />
+      </StatsProvider>
     </AuthProvider>
   );
 }

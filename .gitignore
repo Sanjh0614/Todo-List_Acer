@@ -1,1 +1,10 @@
 __pycache__/
+backend/.env
+backend/dev.db
+backend/dev.db-shm
+backend/dev.db-wal
+backend/todo.db
+node_modules/
+venv/
+*.sqlite
+.DS_Store
