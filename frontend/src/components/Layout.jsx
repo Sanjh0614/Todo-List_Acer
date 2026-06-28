@@ -10,7 +10,18 @@ function Layout({ user, onLogout }) {
       <nav className="sidebar">
         <div className="user-profile">
           <img src={user?.avatar_url || "https://ui-avatars.com/api/?name=" + (user?.name || 'U')} alt="Avatar" className="avatar" />
-          <span>{user?.name || 'User'}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <span>{user?.name || 'User'}</span>
+            {!user?.google_id && (
+              <a 
+                href={`http://localhost:8000/auth/google/login?token=${localStorage.getItem('auth_token')}`}
+                style={{ fontSize: '10px', color: 'var(--color-primary)', textDecoration: 'none', marginTop: '2px', fontWeight: 600 }}
+                title="Connect Google Calendar for 2-way sync"
+              >
+                + Connect Calendar
+              </a>
+            )}
+          </div>
         </div>
         
         <ul className="nav-links">

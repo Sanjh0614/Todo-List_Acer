@@ -23,7 +23,7 @@ export default function ObjectivePopover({ objective, channels, onClose, onUpdat
 
   const fetchTasks = async () => {
     try {
-      const res = await api.get('/api/tasks?weekly_objective_id=' + objective.id);
+      const res = await api.get('/api/tasks?weekly_plan_id=' + objective.id);
       setTasks(res.data || res || []);
     } catch (e) {
       console.error(e);
@@ -64,7 +64,7 @@ export default function ObjectivePopover({ objective, channels, onClose, onUpdat
         await api.post('/api/tasks', {
           title: title || 'New Objective',
           planned_date: dateStr,
-          weekly_objective_id: objective.id,
+          weekly_plan_id: objective.id,
           channel_id: channelId,
           estimated_minutes: minutes
         });

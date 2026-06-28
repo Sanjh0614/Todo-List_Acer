@@ -109,10 +109,10 @@ export default function WeeklyPlanning() {
     
     try {
       const res = await api.post('/api/weekly-objectives', {
-        title: '',
+        title: 'New Objective',
         week_start_date: formatLocalDate(start),
         week_end_date: formatLocalDate(end),
-        status: 'todo'
+        status: 'planned'
       });
       const newObj = res.data || res;
       fetchObjectives();
