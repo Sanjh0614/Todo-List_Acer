@@ -64,6 +64,7 @@ def google_login():
 def google_callback(request: Request, db: Session = Depends(get_db)):
     import os
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
     
     state = request.query_params.get("state")
     flow = get_google_flow(state=state)

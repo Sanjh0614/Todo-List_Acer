@@ -1,15 +1,29 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import AddTaskBar from '../components/AddTaskBar';
 import './Today.css';
 
 function Today() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const tabFromQuery = queryParams.get('tab') || 'planning';
+
   const [tasks, setTasks] = useState([]);
   const [channels, setChannels] = useState([]);
   const [highlights, setHighlights] = useState([]);
   const [events, setEvents] = useState([]);
   
-  const [activeTab, setActiveTab] = useState('planning'); 
+  const [activeTab, setActiveTab] = useState(tabFromQuery);
+
+  useEffect(() => {
+    setActiveTab(tabFromQuery);
+  }, [tabFromQuery]);
+
+  const handleTabClick = (tab) => {
+    navigate(`/today?tab=${tab}`);
+  };
   const [filterChannel, setFilterChannel] = useState('all');
   const [calendarExpanded, setCalendarExpanded] = useState('none'); 
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -212,28 +226,18 @@ function Today() {
 
   return (
     <div className="today-page">
-      <div className="rituals-sidebar">
-        <h3>DAILY RITUALS</h3>
-        <ul className="rituals-list">
-          <li className={activeTab === 'planning' ? 'active' : ''} onClick={() => setActiveTab('planning')}>Daily planning</li>
-          <li className={activeTab === 'shutdown' ? 'active' : ''} onClick={() => setActiveTab('shutdown')}>Daily shutdown</li>
-          <li className={activeTab === 'highlights' ? 'active' : ''} onClick={() => setActiveTab('highlights')}>Daily highlights</li>
-        </ul>
-
-        <div className="filter-dropdown mt-6">
-          <label>Filter by channel:</label>
-          <select value={filterChannel} onChange={e => setFilterChannel(e.target.value)}>
-            <option value="all"># all</option>
-            {channels.map(c => <option key={c.id} value={c.id}># {c.name}</option>)}
-          </select>
-        </div>
-      </div>
-
-      <div className="board-area" onScroll={handleBoardScroll}>
+      <div className="board-area" onScroll={handleBoardScroll} style={{ position: 'relative' }}>
         {activeTab === 'planning' && (
           <>
-          <div style={{ marginBottom: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
             <AddTaskBar defaultDate={selectedStartDate.toISOString().split('T')[0]} channels={channels} onTaskAdded={fetchData} />
+            <div className="filter-dropdown" style={{ marginLeft: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <label style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>Filter:</label>
+              <select value={filterChannel} onChange={e => setFilterChannel(e.target.value)} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text)', borderRadius: '4px', padding: '4px 8px' }}>
+                <option value="all"># all</option>
+                {channels.map(c => <option key={c.id} value={c.id}># {c.name}</option>)}
+              </select>
+            </div>
           </div>
           <div className="board-grid">
             {dates.map(dateStr => {

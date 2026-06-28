@@ -8,3 +8,4 @@ node_modules/
 venv/
 *.sqlite
 .DS_Store
+.env

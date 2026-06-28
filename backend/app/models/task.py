@@ -25,6 +25,7 @@ class Task(Base):
     pomodoros_estimated: Mapped[int] = mapped_column(Integer, default=1)
     pomodoros_completed: Mapped[int] = mapped_column(Integer, default=0)
     channel_id: Mapped[int] = mapped_column(Integer, ForeignKey("channels.id", ondelete="SET NULL"), nullable=True)
+    weekly_objective_id: Mapped[int] = mapped_column(Integer, ForeignKey("weekly_objectives.id", ondelete="SET NULL"), nullable=True)
     planned_date: Mapped[Date] = mapped_column(Date, nullable=True)
     start_time: Mapped[Time] = mapped_column(Time, nullable=True)
     end_time: Mapped[Time] = mapped_column(Time, nullable=True)
@@ -34,3 +35,4 @@ class Task(Base):
     commitment: Mapped["Commitment"] = relationship("Commitment", back_populates="tasks")
     focus_sessions: Mapped[list] = relationship("FocusSession", back_populates="task")
     channel: Mapped["Channel"] = relationship("Channel", back_populates="tasks")
+    weekly_objective: Mapped["WeeklyObjective"] = relationship("WeeklyObjective", back_populates="tasks")

@@ -15,7 +15,7 @@ from contextlib import asynccontextmanager
 from loguru import logger
 from app.config import settings
 from app.database import engine, Base
-from app.models import user, commitment, task, reminder, channel, daily_highlight
+from app.models import user, commitment, task, reminder, channel, daily_highlight, weekly_objective
 from app.focus import models as focus_models
 
 @asynccontextmanager
@@ -53,6 +53,7 @@ from app.routers.ai import router as ai_router
 from app.routers.channels import router as channels_router
 from app.routers.rituals import router as rituals_router
 from app.routers.calendar import router as calendar_router
+from app.routers.weekly_objectives import router as weekly_objectives_router
 
 app.include_router(auth_router)
 app.include_router(commitments_router)
@@ -64,6 +65,7 @@ app.include_router(ai_router)
 app.include_router(channels_router)
 app.include_router(rituals_router)
 app.include_router(calendar_router)
+app.include_router(weekly_objectives_router)
 
 @app.get("/")
 def root():

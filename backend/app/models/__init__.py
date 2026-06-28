@@ -5,3 +5,4 @@ from app.focus.models import FocusSession
 from app.models.reminder import Reminder, Feedback
 from app.models.channel import Channel
 from app.models.daily_highlight import DailyHighlight
+from app.models.weekly_objective import WeeklyObjective

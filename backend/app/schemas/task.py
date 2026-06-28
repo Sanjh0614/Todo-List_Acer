@@ -15,6 +15,7 @@ class TaskOut(BaseModel):
     pomodoros_completed: int
     priority: str
     channel_id: Optional[int] = None
+    weekly_objective_id: Optional[int] = None
     planned_date: Optional[date] = None
     start_time: Optional[time] = None
     end_time: Optional[time] = None
@@ -25,3 +26,5 @@ class TaskCreate(BaseModel):
     planned_date: Optional[date] = None
     priority: Optional[str] = "none"
     channel_id: Optional[int] = None
+    weekly_objective_id: Optional[int] = None
+    estimated_minutes: Optional[int] = 25

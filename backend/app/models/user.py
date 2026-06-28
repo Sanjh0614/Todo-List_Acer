@@ -24,6 +24,7 @@ class User(Base):
     focus_sessions: Mapped[list["FocusSession"]] = relationship("FocusSession", back_populates="user", cascade="all, delete-orphan")
     reminders: Mapped[list["Reminder"]] = relationship("Reminder", back_populates="user", cascade="all, delete-orphan")
     feedbacks: Mapped[list["Feedback"]] = relationship("Feedback", back_populates="user", cascade="all, delete-orphan")
+    weekly_objectives: Mapped[list["WeeklyObjective"]] = relationship("WeeklyObjective", back_populates="user", cascade="all, delete-orphan")
 
     @property
     def default_preferences(self) -> dict:

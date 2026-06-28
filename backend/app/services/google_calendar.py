@@ -57,7 +57,6 @@ def create_calendar_event(user, task):
         return None
         
     date_str = task.planned_date.isoformat()
-    # For all-day events, Google Calendar API expects the end date to be the day after.
     end_date = task.planned_date + timedelta(days=1)
     end_date_str = end_date.isoformat()
     
@@ -78,6 +77,38 @@ def create_calendar_event(user, task):
     except Exception as e:
         print(f"Failed to create Google Calendar event: {e}")
         return None
+
+def update_calendar_event(user, task):
+    if not task.google_event_id:
+        return create_calendar_event(user, task)
+
+    service = get_calendar_service(user)
+    if not service: return None
+    
+    if not task.planned_date:
+        return None
+        
+    date_str = task.planned_date.isoformat()
+    end_date = task.planned_date + timedelta(days=1)
+    end_date_str = end_date.isoformat()
+    
+    event = {
+        'summary': task.title,
+        'description': task.description or '',
+        'start': {
+            'date': date_str,
+        },
+        'end': {
+            'date': end_date_str, 
+        }
+    }
+    
+    try:
+        updated_event = service.events().update(calendarId='primary', eventId=task.google_event_id, body=event).execute()
+        return updated_event.get('id')
+    except Exception as e:
+        print(f"Failed to update Google Calendar event: {e}")
+        return task.google_event_id
 
 def delete_calendar_event(user, event_id):
     service = get_calendar_service(user)
