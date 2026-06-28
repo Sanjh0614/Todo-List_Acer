@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { GripVertical, Trash2, Edit2, Check, X } from 'lucide-react';
 import api from '../services/api';
 import './AddTaskBar.css';
 
@@ -22,6 +23,7 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showPriorityPicker, setShowPriorityPicker] = useState(false);
   const [showChannelPicker, setShowChannelPicker] = useState(false);
+  const [showManageChannels, setShowManageChannels] = useState(false);
   const [channelSearch, setChannelSearch] = useState('');
 
   const containerRef = useRef(null);
@@ -171,7 +173,6 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
                 {channelSearch && !channels.find(c => c.name.toLowerCase() === channelSearch.toLowerCase()) && (
                   <div className="popover-item" style={{ color: '#10B981' }} onClick={async () => {
                     try {
-                      // Support sending data to our local backend directly to create a channel
                       const res = await api.post('/api/channels', { name: channelSearch.toLowerCase(), color: '#10B981' });
                       setChannelId(res.data?.id || res.id);
                       setShowChannelPicker(false);
@@ -185,7 +186,9 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
                   </div>
                 )}
                 <div className="popover-divider"></div>
-                <div className="popover-item" style={{ color: '#3b82f6', fontSize: '11px' }}>Manage channels</div>
+                <div className="popover-item" style={{ color: '#3b82f6', fontSize: '11px', cursor: 'pointer' }} onClick={() => {setShowManageChannels(true); setShowChannelPicker(false);}}>
+                  Manage channels
+                </div>
               </div>
             )}
           </div>
@@ -207,6 +210,154 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
             )}
           </div>
         </div>
+      </div>
+
+      {showManageChannels && (
+        <ManageChannelsModal 
+          channels={channels} 
+          onClose={() => setShowManageChannels(false)} 
+          onUpdated={onTaskAdded}
+        />
+      )}
+    </div>
+  );
+}
+
+function ManageChannelsModal({ channels, onClose, onUpdated }) {
+  const [localChannels, setLocalChannels] = useState([...channels]);
+  const [editingId, setEditingId] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [editColor, setEditColor] = useState('');
+  const [draggedIdx, setDraggedIdx] = useState(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+  useEffect(() => {
+    setLocalChannels([...channels]);
+  }, [channels]);
+
+  const handleDragStart = (e, index) => {
+    setDraggedIdx(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    if (draggedIdx === null || draggedIdx === index) return;
+    
+    const newChannels = [...localChannels];
+    const draggedItem = newChannels[draggedIdx];
+    
+    newChannels.splice(draggedIdx, 1);
+    newChannels.splice(index, 0, draggedItem);
+    
+    setDraggedIdx(index);
+    setLocalChannels(newChannels);
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    setDraggedIdx(null);
+    try {
+      const channelIds = localChannels.map(c => c.id);
+      await api.patch('/api/channels/reorder', { channel_ids: channelIds });
+      if (onUpdated) onUpdated();
+    } catch (err) {
+      console.error("Failed to reorder", err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/api/channels/${id}`);
+      setDeleteConfirmId(null);
+      if (onUpdated) onUpdated();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const startEdit = (c) => {
+    setEditingId(c.id);
+    setEditName(c.name);
+    setEditColor(c.color || '#10B981');
+  };
+
+  const saveEdit = async (id) => {
+    try {
+      await api.put(`/api/channels/${id}`, { name: editName, color: editColor });
+      setEditingId(null);
+      if (onUpdated) onUpdated();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <div className="task-modal-overlay" onClick={(e) => { if (e.target.className === 'task-modal-overlay') onClose(); }}>
+      <div className="task-modal-content" style={{ width: '400px', position: 'relative' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h3 style={{ margin: 0, fontSize: '16px' }}>Manage Channels</h3>
+          <button className="icon-btn" onClick={onClose}><X size={18} /></button>
+        </div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {localChannels.map((c, index) => (
+            <div 
+              key={c.id} 
+              draggable={editingId !== c.id}
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDrop={handleDrop}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px', 
+                padding: '8px', background: 'var(--color-surface)',
+                borderRadius: '6px', border: '1px solid var(--color-border)',
+                opacity: draggedIdx === index ? 0.5 : 1
+              }}
+            >
+              <div style={{ cursor: editingId === c.id ? 'default' : 'grab', color: 'var(--color-text-muted)', display: 'flex' }}>
+                <GripVertical size={16} />
+              </div>
+              
+              {editingId === c.id ? (
+                <div style={{ display: 'flex', gap: '8px', flex: 1, alignItems: 'center' }}>
+                  <input type="color" value={editColor} onChange={e => setEditColor(e.target.value)} style={{ width: '24px', height: '24px', padding: 0, border: 'none', background: 'none' }} />
+                  <input type="text" value={editName} onChange={e => setEditName(e.target.value)} autoFocus style={{ flex: 1, background: 'var(--color-bg)', border: '1px solid var(--color-border)', color: '#fff', padding: '4px 8px', borderRadius: '4px' }} />
+                  <button className="icon-btn" onClick={() => saveEdit(c.id)} style={{ color: '#10B981' }}><Check size={16} /></button>
+                  <button className="icon-btn" onClick={() => setEditingId(null)} style={{ color: '#ef4444' }}><X size={16} /></button>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', gap: '8px', flex: 1, alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: c.color || '#10B981' }}></div>
+                    <span>{c.name}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '4px' }}>
+                    <button className="icon-btn" onClick={() => startEdit(c)}><Edit2 size={14} /></button>
+                    <button className="icon-btn" onClick={() => setDeleteConfirmId(c.id)} style={{ color: '#ef4444' }}><Trash2 size={14} /></button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {deleteConfirmId && (
+          <div style={{
+            position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+            background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            borderRadius: '12px', zIndex: 10
+          }}>
+            <div style={{ background: 'var(--color-surface)', padding: '24px', borderRadius: '8px', border: '1px solid var(--color-border)', width: '80%', textAlign: 'center' }}>
+              <h4 style={{ marginTop: 0, marginBottom: '16px' }}>Delete Channel?</h4>
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '14px', marginBottom: '24px' }}>Are you sure you want to delete this channel? Tasks in this channel will be orphaned.</p>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                <button className="btn btn-secondary" onClick={() => setDeleteConfirmId(null)}>Cancel</button>
+                <button className="btn btn-primary" style={{ background: '#ef4444', borderColor: '#ef4444' }} onClick={() => handleDelete(deleteConfirmId)}>Delete</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

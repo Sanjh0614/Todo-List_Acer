@@ -84,6 +84,7 @@ const api = {
   get: (path) => req("GET", path),
   post: (path, body) => req("POST", path, body),
   patch: (path, body) => req("PATCH", path, body),
+  put: (path, body) => req("PUT", path, body),
   delete: (path) => req("DELETE", path),
 };
 export default api;

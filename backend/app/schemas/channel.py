@@ -16,3 +16,6 @@ class ChannelOut(BaseModel):
     color: str
 
     class Config: from_attributes = True
+
+class ChannelReorder(BaseModel):
+    channel_ids: list[int]

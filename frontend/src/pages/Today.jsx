@@ -14,6 +14,7 @@ function Today() {
   const [calendarExpanded, setCalendarExpanded] = useState('none'); 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [showMonthDropdown, setShowMonthDropdown] = useState(false);
+  const [numDays, setNumDays] = useState(7);
   const [taskModalDate, setTaskModalDate] = useState(null);
   const [selectedStartDate, setSelectedStartDate] = useState(() => {
     const d = new Date();
@@ -22,11 +23,19 @@ function Today() {
   });
   
   const today = new Date();
-  const dates = Array.from({length: 4}).map((_, i) => {
+  const dates = Array.from({length: numDays}).map((_, i) => {
     const d = new Date(selectedStartDate);
     d.setDate(d.getDate() + i);
     return d.toISOString().split('T')[0];
   });
+
+  const handleBoardScroll = (e) => {
+    const { scrollLeft, scrollWidth, clientWidth } = e.target;
+    // Load more days when scrolled near the right edge
+    if (scrollLeft + clientWidth >= scrollWidth - 100) {
+      setNumDays(prev => prev + 7);
+    }
+  };
 
   const fetchCalendarEvents = useCallback(async (expandedState, monthDate) => {
     try {
@@ -220,7 +229,7 @@ function Today() {
         </div>
       </div>
 
-      <div className="board-area">
+      <div className="board-area" onScroll={handleBoardScroll}>
         {activeTab === 'planning' && (
           <>
           <div style={{ marginBottom: '16px' }}>

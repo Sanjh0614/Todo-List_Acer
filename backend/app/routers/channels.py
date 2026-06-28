@@ -4,13 +4,25 @@ from app.database import get_db
 from app.models.channel import Channel
 from app.models.user import User
 from app.routers.deps import get_current_user
-from app.schemas.channel import ChannelCreate, ChannelUpdate, ChannelOut
+from app.schemas.channel import ChannelCreate, ChannelUpdate, ChannelOut, ChannelReorder
 
 router = APIRouter(prefix="/api/channels", tags=["channels"])
 
 @router.get("", response_model=list[ChannelOut])
 def get_channels(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
-    return db.query(Channel).filter(Channel.user_id == user.id).all()
+    return db.query(Channel).filter(Channel.user_id == user.id).order_by(Channel.order_index, Channel.id).all()
+
+@router.patch("/reorder")
+def reorder_channels(data: ChannelReorder, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    channels = db.query(Channel).filter(Channel.user_id == user.id, Channel.id.in_(data.channel_ids)).all()
+    channel_map = {c.id: c for c in channels}
+    
+    for i, cid in enumerate(data.channel_ids):
+        if cid in channel_map:
+            channel_map[cid].order_index = i
+            
+    db.commit()
+    return {"message": "Channels reordered"}
 
 @router.post("", response_model=ChannelOut)
 def create_channel(data: ChannelCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
