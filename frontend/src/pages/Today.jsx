@@ -150,6 +150,7 @@ function Today() {
         if (e.start?.dateTime) return e.start.dateTime.split('T')[0] === dateStr;
         return false;
       });
+      const dayTasks = tasks.filter(t => t.planned_date === dateStr);
 
       const isToday = dateStr === new Date().toISOString().split('T')[0];
 
@@ -161,6 +162,12 @@ function Today() {
             <span className={isToday ? 'date-badge' : ''}>{day}</span>
           </div>
           <div className="cell-events">
+            {dayTasks.map(t => (
+              <div key={'task-'+t.id} className="month-event-chip local-task">
+                <span className="month-evt-dot" style={{ color: t.is_done ? '#10B981' : 'var(--color-primary)' }}>●</span>
+                <span className="month-evt-title" style={{ textDecoration: t.is_done ? 'line-through' : 'none', color: t.is_done ? 'var(--color-text-muted)' : 'inherit' }}>{t.title}</span>
+              </div>
+            ))}
             {dayEvents.map(evt => {
               const isAllDay = !!evt.start?.date;
               return (
@@ -337,6 +344,8 @@ function Today() {
                   return false;
                 });
 
+                const dayTasks = tasks.filter(t => t.planned_date === dateStr);
+
                 return (
                   <div key={dateStr} className="cal-day-block">
                     <div className="cal-day-header" style={{ paddingBottom: '8px', borderBottom: '1px solid var(--color-border)', marginBottom: '8px' }}>
@@ -344,7 +353,25 @@ function Today() {
                       <span className="date">{new Date(dateStr).getDate()}</span>
                     </div>
                     <div className="cal-day-events" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      {dayEvents.length === 0 && <div className="no-events" style={{ color: 'var(--color-text-muted)', fontSize: '12px' }}>No events</div>}
+                      {dayEvents.length === 0 && dayTasks.length === 0 && <div className="no-events" style={{ color: 'var(--color-text-muted)', fontSize: '12px' }}>No events</div>}
+                      
+                      {dayTasks.map(t => (
+                          <div key={'task-'+t.id} className="cal-event-chip" style={{ 
+                            background: 'var(--color-surface)', 
+                            padding: '8px 12px', 
+                            borderRadius: '6px', 
+                            fontSize: '12px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '4px',
+                            borderLeft: `3px solid ${t.is_done ? '#10B981' : 'var(--color-primary)'}`
+                          }}>
+                            <span className="evt-time" style={{ color: 'var(--color-text-muted)', fontSize: '11px', fontWeight: 600 }}>
+                              {t.estimated_minutes > 0 ? `${t.estimated_minutes} min` : 'Task'}
+                            </span>
+                            <span className="evt-title" style={{ color: 'var(--color-text)', textDecoration: t.is_done ? 'line-through' : 'none' }}>{t.title}</span>
+                          </div>
+                      ))}
                       {dayEvents.map(evt => {
                         const isAllDay = !!evt.start?.date;
                         let timeLabel = "All Day";

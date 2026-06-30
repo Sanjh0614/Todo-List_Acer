@@ -6,6 +6,34 @@ backend/dev.db-wal
 backend/todo.db
 node_modules/
 venv/
+backend/venv/
 *.sqlite
 .DS_Store
 .env
+CHANGELOG_AUTH_CALENDAR_SYNC.md
+PROJECT_ARCHITECTURE_AND_FLOW.md
+
+# Logs and databases
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+.coverage
+htmlcov/
+.pytest_cache/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+Thumbs.db
+
+# Caches
+.eslintcache
