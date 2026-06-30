@@ -158,10 +158,7 @@ export default function WeeklyReview() {
             <div className="ai-loader-ring"></div>
             <span style={{ fontSize: '48px', display: 'block', marginBottom: '24px', animation: 'pulse-slow 2s infinite' }}>✨</span>
           </div>
-          <h3 className="loading-gradient-text" style={{ margin: '0 0 12px 0', fontSize: '24px' }}>Deep diving into your week...</h3>
-          <p style={{ color: 'var(--color-text-muted)', maxWidth: '450px', margin: '0 auto', lineHeight: '1.6' }}>
-            The AI is gathering your completed tasks, analyzing friction points, and structuring a highly personalized action plan. This takes about 10-15 seconds.
-          </p>
+          <h3 className="loading-gradient-text" style={{ margin: '0', fontSize: '24px' }}>Deep diving into your week...</h3>
         </div>
       )}
 

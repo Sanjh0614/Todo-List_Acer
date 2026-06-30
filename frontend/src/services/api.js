@@ -70,6 +70,7 @@ export const getTasks = (filters = {}) => {
   const qs = params.toString();
   return req('GET', `/api/tasks${qs ? '?' + qs : ''}`);
 };
+export const getBacklog = () => req('GET', '/api/tasks/backlog');
 export const createTask = (data) => req('POST', '/api/tasks', data);
 export const updateTask = (taskId, data) => req('PUT', `/api/tasks/${taskId}`, data);
 export const markTaskDone = (taskId) => req('PATCH', `/api/tasks/${taskId}/done`);

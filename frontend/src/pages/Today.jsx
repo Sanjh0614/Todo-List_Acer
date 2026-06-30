@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import AddTaskBar from '../components/AddTaskBar';
+import { Check } from 'lucide-react';
 import './Today.css';
 
 const renderMarkdown = (text) => {
@@ -59,6 +60,16 @@ function Today() {
   const [loading, setLoading] = useState(false);
   
   const [activeTab, setActiveTab] = useState(tabFromQuery);
+
+  const handleCompleteAndDelete = async (taskId) => {
+    if (!window.confirm("Complete and permanently delete this task?")) return;
+    try {
+      await api.delete(`/api/tasks/${taskId}`);
+      fetchData();
+    } catch (e) {
+      console.error("Failed to delete task", e);
+    }
+  };
 
   useEffect(() => {
     setActiveTab(tabFromQuery);
@@ -316,7 +327,35 @@ function Today() {
                                 {t.pomodoros_completed} 🍅 | {Math.round((t.actual_minutes||0)/60 * 10)/10}h
                               </span>
                             </span>
-                            <span className="channel-tag"># {channels.find(c => c.id === t.channel_id)?.name || 'work'}</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span className="channel-tag"># {t.channel_id ? (channels.find(c => c.id === t.channel_id)?.name || 'Unassigned') : 'Unassigned'}</span>
+                              <button 
+                                className="btn btn-ghost" 
+                                style={{ 
+                                  padding: '4px 8px', 
+                                  fontSize: '11px', 
+                                  color: 'var(--color-success)', 
+                                  borderColor: 'var(--color-success)', 
+                                  borderWidth: '1px',
+                                  borderStyle: 'solid',
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  gap: '4px' 
+                                }}
+                                onClick={() => handleCompleteAndDelete(t.id)}
+                                title="Complete & Delete (removes from Calendar too)"
+                                onMouseOver={(e) => {
+                                  e.currentTarget.style.backgroundColor = 'var(--color-success)';
+                                  e.currentTarget.style.color = '#000';
+                                }}
+                                onMouseOut={(e) => {
+                                  e.currentTarget.style.backgroundColor = 'transparent';
+                                  e.currentTarget.style.color = 'var(--color-success)';
+                                }}
+                              >
+                                <Check size={14} strokeWidth={3} /> Complete
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -371,10 +410,7 @@ function Today() {
                   <div className="ai-loader-ring"></div>
                   <span style={{ fontSize: '48px', display: 'block', marginBottom: '24px', animation: 'pulse-slow 2s infinite' }}>✨</span>
                 </div>
-                <h3 className="loading-gradient-text" style={{ margin: '0 0 12px 0', fontSize: '24px' }}>Reflecting on your day...</h3>
-                <p style={{ color: 'var(--color-text-muted)', maxWidth: '450px', margin: '0 auto', lineHeight: '1.6' }}>
-                  The AI is breaking down your completed tasks and identifying momentum opportunities. This takes about 10-15 seconds.
-                </p>
+                <h3 className="loading-gradient-text" style={{ margin: '0', fontSize: '24px' }}>Reflecting on your day...</h3>
               </div>
             )}
 

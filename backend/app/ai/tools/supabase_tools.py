@@ -311,19 +311,33 @@ def fetch_productivity_stats(user_id: str, period: str = "day") -> dict:
 
 @tool
 def create_task(user_id: str, title: str, due_date: Optional[str] = None,
-                priority: str = "medium", commitment_id: Optional[str] = None) -> dict:
+                priority: str = "medium", commitment_id: Optional[str] = None,
+                start_time: Optional[str] = None, end_time: Optional[str] = None,
+                reminder_hours_before: Optional[int] = None) -> dict:
     """
     Create a new task for the user in the database. Priority can be low/medium/high/urgent.
-    CRITICAL: This ONLY creates the task in the database. You MUST immediately call `sync_task_to_google_calendar` with the returned task ID so it shows up on their live Google Calendar!
+    CRITICAL: You MUST ask the user for the task's start_time and end_time (in HH:MM:SS or HH:MM format) if they did not provide them!
+    CRITICAL: You MUST ask the user if they want a reminder (1, 2, or 3 hours) before the start time if they are setting a start_time!
+    CRITICAL: This ONLY creates the task in the database. You MUST immediately call `sync_task_to_google_calendar` with the returned task ID!
     """
     from app.database import SessionLocal
     from app.models.task import Task
     from datetime import date as dt
+    from datetime import datetime, time, timedelta
 
     def _run():
         db = SessionLocal()
         try:
             parsed_date = dt.fromisoformat(due_date) if due_date else None
+            
+            parsed_start = None
+            if start_time:
+                parsed_start = datetime.strptime(start_time[:5], '%H:%M').time()
+            
+            parsed_end = None
+            if end_time:
+                parsed_end = datetime.strptime(end_time[:5], '%H:%M').time()
+
             task = Task(
                 user_id=_clean_id(user_id),
                 title=title,
@@ -331,16 +345,28 @@ def create_task(user_id: str, title: str, due_date: Optional[str] = None,
                 due_date=parsed_date,
                 planned_date=parsed_date, # Required to show up in Calendar and Daily Planning
                 commitment_id=_clean_id(commitment_id) if commitment_id else None,
+                start_time=parsed_start,
+                end_time=parsed_end,
+                reminder_hours_before=reminder_hours_before,
             )
             db.add(task)
             db.commit()
             db.refresh(task)
+            
+            # Schedule emails based on task properties (either exact time or 3x daily)
+            from app.services.email_scheduler import setup_task_email_schedule
+            setup_task_email_schedule(task)
+            
             return _task_to_dict(task)
+        except Exception as e:
+            return {"error": f"Failed to create task: {str(e)}"}
         finally:
             db.close()
 
     return _run_tool("create_task", {"user_id": user_id, "title": title,
-                                      "due_date": due_date, "priority": priority}, _run)
+                                      "due_date": due_date, "priority": priority, 
+                                      "start_time": start_time, "end_time": end_time,
+                                      "reminder_hours_before": reminder_hours_before}, _run)
 
 
 @tool

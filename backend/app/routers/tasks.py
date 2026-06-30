@@ -6,8 +6,10 @@ Real-time sync: Supabase Realtime broadcasts task INSERT/UPDATE/DELETE events
 automatically since we write through SQLAlchemy to Supabase PostgreSQL.
 """
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func
+from datetime import datetime, timedelta
 from app.database import get_db
 from app.models.task import Task
 from app.models.commitment import Commitment
@@ -21,6 +23,38 @@ from datetime import date as date_type
 
 router = APIRouter(prefix="/api/tasks", tags=["tasks"])
 
+
+# ── Backlog Tasks (Dynamic AI Recommended) ───────────────────────────────────
+@router.get("/backlog")
+async def get_backlog_tasks(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    """
+    Fetches all overdue tasks and concurrently uses the LangGraph backlog agent 
+    to generate customized AI recommendations for each without feeding raw JSON to the LLM.
+    """
+    import asyncio
+    from app.ai.graph.backlog_graph import generate_backlog_recommendation_graph
+    
+    today = date_type.today()
+    overdue_tasks = db.query(Task).filter(
+        Task.user_id == user.id,
+        Task.is_done == False,
+        Task.planned_date < today
+    ).order_by(Task.planned_date.desc()).all()
+    
+    if not overdue_tasks:
+        return []
+
+    # Prepare async execution for LangGraph tool calls
+    async def fetch_recommendation(task):
+        rec = await generate_backlog_recommendation_graph(task.id)
+        # Convert SQLAlchemy object to dictionary safely
+        task_dict = {c.name: getattr(task, c.name) for c in task.__table__.columns}
+        task_dict["ai_recommendation"] = rec
+        return task_dict
+
+    # Execute all LangGraph workflows concurrently
+    results = await asyncio.gather(*(fetch_recommendation(t) for t in overdue_tasks))
+    return list(results)
 
 # ── List Tasks ─────────────────────────────────────────────────────────────────
 @router.get("", response_model=list[TaskOut])
@@ -71,6 +105,7 @@ def create_task(data: TaskCreate, db: Session = Depends(get_db), user: User = De
         estimated_minutes=data.estimated_minutes,
         start_time=data.start_time,
         end_time=data.end_time,
+        reminder_hours_before=data.reminder_hours_before,
     )
     db.add(task)
     db.commit()
@@ -83,6 +118,9 @@ def create_task(data: TaskCreate, db: Session = Depends(get_db), user: User = De
             task.google_event_id = event_id
             db.commit()
             db.refresh(task)
+
+    from app.services.email_scheduler import setup_task_email_schedule
+    setup_task_email_schedule(task)
 
     return task
 
@@ -113,6 +151,10 @@ def update_task(task_id: int, data: TaskUpdate, db: Session = Depends(get_db), u
                 db.commit()
                 db.refresh(task)
 
+    # Re-schedule emails
+    from app.services.email_scheduler import setup_task_email_schedule
+    setup_task_email_schedule(task)
+
     return task
 
 
@@ -138,6 +180,35 @@ def mark_task_undone(task_id: int, db: Session = Depends(get_db), user: User = D
     db.commit()
     db.refresh(task)
     return task
+
+
+# ── Complete & Delete via Email ────────────────────────────────────────────────
+@router.get("/{task_id}/complete_via_email", response_class=HTMLResponse)
+def complete_task_via_email(task_id: int, db: Session = Depends(get_db)):
+    from app.config import settings
+    # Since this is clicked from email, we might not have a Bearer token in the GET request.
+    task = db.query(Task).filter(Task.id == task_id).first()
+    if not task:
+        return "<h2>Task not found or already deleted! Great job! 🎉</h2>"
+
+    user = db.query(User).filter(User.id == task.user_id).first()
+    
+    if user and user.google_access_token and task.google_event_id:
+        delete_calendar_event(user, task.google_event_id, db=db)
+
+    db.delete(task)
+    db.commit()
+    
+    return f"""
+    <html>
+        <body style="font-family: sans-serif; text-align: center; padding: 50px; background: #000; color: #10B981;">
+            <h1>🎉 Fantastic Work!</h1>
+            <h2>'{task.title}' has been marked as complete.</h2>
+            <br/>
+            <a href="{settings.FRONTEND_URL}/dashboard" style="color: #8B5CF6; text-decoration: none;">Return to Dashboard</a>
+        </body>
+    </html>
+    """
 
 
 # ── Delete Task ────────────────────────────────────────────────────────────────

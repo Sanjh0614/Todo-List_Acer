@@ -221,11 +221,12 @@ function Dashboard() {
               <ul className="reminder-list">
                 {reminders.map(r => (
                   <li key={r.id} className="reminder-item">
-                    <span className="reminder-style-dot" data-style={r.style} />
+                    <span className="reminder-style-dot" data-style={r.style || 'default'} />
                     <div>
                       <p className="reminder-message">{r.message}</p>
                       <span className="muted" style={{ fontSize: '0.75rem' }}>
-                        {r.sent_at ? new Date(r.sent_at).toLocaleString() : ''}
+                        {r.scheduled_for ? `Scheduled: ${new Date(r.scheduled_for).toLocaleString([], {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'})}` 
+                         : (r.sent_at ? new Date(r.sent_at).toLocaleString([], {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'}) : '')}
                       </span>
                     </div>
                   </li>

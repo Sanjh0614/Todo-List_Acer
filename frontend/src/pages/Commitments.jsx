@@ -85,10 +85,7 @@ function Commitments() {
   const [search, setSearch]     = useState('');
   const [filter, setFilter]     = useState('all');    // all | high | overdue
 
-  // AI ingest state
-  const [rawText, setRawText]   = useState('');
-  const [ingesting, setIngesting] = useState(false);
-  const [ingestErr, setIngestErr] = useState(null);
+  // AI ingest state removed as requested
 
   // Manual form state
   const today = new Date().toISOString().split('T')[0];
@@ -160,19 +157,7 @@ function Commitments() {
     finally { setAiLoading(null); }
   };
 
-  // ── AI Ingest ────────────────────────────────────────────────────
-  const handleIngest = async (e) => {
-    e.preventDefault();
-    if (!rawText.trim()) return;
-    setIngesting(true); setIngestErr(null);
-    try {
-      const c = await ingestCommitment(rawText);
-      setItems(cs => [c, ...cs]);
-      setRawText('');
-      setTab('list');
-    } catch (e) { setIngestErr(e.message); }
-    finally { setIngesting(false); }
-  };
+  // ── AI Ingest Handler Removed ──
 
   // ── Manual Create ─────────────────────────────────────────────────
   const setF = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -200,35 +185,13 @@ function Commitments() {
       <header className="top-header">
         <h2>Commitments</h2>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className={`btn ${tab === 'ai' ? 'btn-primary' : 'btn-ghost'}`} onClick={() => setTab(tab === 'ai' ? 'list' : 'ai')}>
-            🤖 AI Ingest
-          </button>
           <button className={`btn ${tab === 'manual' ? 'btn-primary' : 'btn-ghost'}`} onClick={() => setTab(tab === 'manual' ? 'list' : 'manual')}>
             ✏️ Add Manual
           </button>
         </div>
       </header>
 
-      {/* ── AI Ingest Panel ── */}
-      {tab === 'ai' && (
-        <div className="panel">
-          <h3>🤖 AI Commitment Extraction</h3>
-          <p className="muted">Paste any text — email, message, note — and AI will extract the commitment details.</p>
-          <form onSubmit={handleIngest}>
-            <textarea
-              className="ai-input"
-              rows={5}
-              value={rawText}
-              onChange={e => setRawText(e.target.value)}
-              placeholder='e.g. "Hey, can you submit the Q3 report by next Friday? Also, the rent is due on the 30th."'
-            />
-            {ingestErr && <div className="error-banner">⚠️ {ingestErr}</div>}
-            <button type="submit" className="btn btn-primary" disabled={ingesting || !rawText.trim()}>
-              {ingesting ? '🤖 Extracting…' : '🚀 Extract & Save to Supabase'}
-            </button>
-          </form>
-        </div>
-      )}
+      {/* ── AI Ingest Panel Removed ── */}
 
       {/* ── Manual Add Panel ── */}
       {tab === 'manual' && (
@@ -299,15 +262,14 @@ function Commitments() {
               </div>
               {c.description && <p className="commitment-card-desc muted">{c.description}</p>}
               <div className="commitment-card-footer">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div className="commitment-card-meta">
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span className="muted" style={{ fontSize: '0.75rem' }}>Priority</span>
-                    <div className="priority-bar-wrap" style={{ width: 80 }}>
+                    <div className="priority-bar-wrap" style={{ width: 60 }}>
                       <div className="priority-bar" style={{ width: `${Math.min(c.priority_score || 0, 100)}%` }} />
                     </div>
-                    <span className="muted" style={{ fontSize: '0.75rem' }}>{Math.round(c.priority_score || 0)}</span>
                   </div>
-                  <div>{formatDue(c.days_until_due)}</div>
+                  <div style={{ fontSize: '0.85rem' }}>{formatDue(c.days_until_due)}</div>
                 </div>
                 <div className="commitment-card-actions">
                   <button
@@ -326,7 +288,7 @@ function Commitments() {
                   >
                     {aiLoading === c.id ? '⏳' : '🔄 Recover'}
                   </button>
-                  <button className="btn btn-ghost btn-sm" onClick={() => handleDone(c.id)} title="Mark done">✓ Done</button>
+                  <button className="btn btn-primary btn-sm" onClick={() => handleDone(c.id)} title="Mark done">✓ Done</button>
                   <button className="btn btn-ghost btn-sm danger" onClick={() => handleDelete(c.id)} title="Delete">🗑</button>
                 </div>
               </div>

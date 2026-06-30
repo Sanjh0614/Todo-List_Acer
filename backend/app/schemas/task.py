@@ -22,6 +22,7 @@ class TaskOut(BaseModel):
     due_date: Optional[date] = None
     start_time: Optional[time] = None
     end_time: Optional[time] = None
+    reminder_hours_before: Optional[int] = None
     google_event_id: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
@@ -43,6 +44,7 @@ class TaskCreate(BaseModel):
     estimated_minutes: Optional[int] = 25
     start_time: Optional[time] = None
     end_time: Optional[time] = None
+    reminder_hours_before: Optional[int] = None
 
 
 class TaskUpdate(BaseModel):
@@ -57,5 +59,6 @@ class TaskUpdate(BaseModel):
     due_date: Optional[date] = None
     start_time: Optional[time] = None
     end_time: Optional[time] = None
+    reminder_hours_before: Optional[int] = None
     estimated_minutes: Optional[int] = None
     order_index: Optional[int] = None

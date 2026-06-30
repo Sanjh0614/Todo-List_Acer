@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GripVertical, Trash2, Edit2, Check, X } from 'lucide-react';
+import { GripVertical, Trash2, Edit2, Check, X, Clock, PlayCircle, StopCircle } from 'lucide-react';
 import api from '../services/api';
 import './AddTaskBar.css';
 
@@ -9,8 +9,11 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
   
   // Selections
   const [plannedDate, setPlannedDate] = useState(defaultDate);
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [priority, setPriority] = useState('none'); // urgent, high, medium, low, none
   const [channelId, setChannelId] = useState(channels.length > 0 ? channels[0].id : null);
+  const [reminderHoursBefore, setReminderHoursBefore] = useState(null);
   
   // Sync channelId when channels are loaded asynchronously
   useEffect(() => {
@@ -23,6 +26,7 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showPriorityPicker, setShowPriorityPicker] = useState(false);
   const [showChannelPicker, setShowChannelPicker] = useState(false);
+  const [showReminderPicker, setShowReminderPicker] = useState(false);
   const [showManageChannels, setShowManageChannels] = useState(false);
   const [channelSearch, setChannelSearch] = useState('');
 
@@ -36,6 +40,7 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
         setShowDatePicker(false);
         setShowPriorityPicker(false);
         setShowChannelPicker(false);
+        setShowReminderPicker(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -48,10 +53,15 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
       await api.post('/api/tasks', {
         title: title.trim(),
         planned_date: plannedDate,
+        start_time: startTime || null,
+        end_time: endTime || null,
         priority,
-        channel_id: channelId
+        channel_id: channelId,
+        reminder_hours_before: reminderHoursBefore
       });
       setTitle('');
+      setStartTime('');
+      setEndTime('');
       setIsOpen(false);
       if (onTaskAdded) onTaskAdded();
     } catch (err) {
@@ -109,7 +119,31 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
       />
       
       <div className="add-task-toolbar">
-        <div></div> {/* Left spacer instead of tip */}
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', background: 'var(--color-surface)', padding: '2px 8px', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <PlayCircle size={14} style={{ color: 'var(--color-text-muted)' }} />
+            <input 
+              type="time" 
+              value={startTime} 
+              onChange={e => setStartTime(e.target.value)} 
+              className="time-input" 
+              title="Start Time"
+              style={{ background: 'transparent', border: 'none', color: 'var(--color-text)', fontSize: '13px', outline: 'none' }}
+            />
+          </div>
+          <span style={{ color: 'var(--color-border)' }}>|</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <StopCircle size={14} style={{ color: 'var(--color-text-muted)' }} />
+            <input 
+              type="time" 
+              value={endTime} 
+              onChange={e => setEndTime(e.target.value)} 
+              className="time-input" 
+              title="End Time"
+              style={{ background: 'transparent', border: 'none', color: 'var(--color-text)', fontSize: '13px', outline: 'none' }}
+            />
+          </div>
+        </div>
         
         <div className="toolbar-actions">
           {/* Add Button */}
@@ -195,7 +229,7 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
 
           {/* Priority Picker */}
           <div className="toolbar-item">
-            <button onClick={() => {setShowPriorityPicker(!showPriorityPicker); setShowDatePicker(false); setShowChannelPicker(false);}}>
+            <button onClick={() => {setShowPriorityPicker(!showPriorityPicker); setShowDatePicker(false); setShowChannelPicker(false); setShowReminderPicker(false);}}>
               {getPriorityIcon(priority)}
             </button>
             {showPriorityPicker && (
@@ -206,6 +240,22 @@ function AddTaskBar({ defaultDate, channels, onTaskAdded }) {
                 <div className="popover-item" onClick={() => {setPriority('medium'); setShowPriorityPicker(false);}}>🟡 Medium</div>
                 <div className="popover-item" onClick={() => {setPriority('low'); setShowPriorityPicker(false);}}>🔵 Low</div>
                 <div className="popover-item" onClick={() => {setPriority('none'); setShowPriorityPicker(false);}}>⚪ No priority {priority === 'none' && '✓'}</div>
+              </div>
+            )}
+          </div>
+
+          {/* Reminder Picker */}
+          <div className="toolbar-item">
+            <button onClick={() => {setShowReminderPicker(!showReminderPicker); setShowPriorityPicker(false); setShowDatePicker(false); setShowChannelPicker(false);}}>
+              🔔 {reminderHoursBefore ? `${reminderHoursBefore}hr before` : 'No reminder'}
+            </button>
+            {showReminderPicker && (
+              <div className="popover priority-popover">
+                <div className="popover-header">Remind me before start time</div>
+                <div className="popover-item" onClick={() => {setReminderHoursBefore(1); setShowReminderPicker(false);}}>1 hour before {reminderHoursBefore === 1 && '✓'}</div>
+                <div className="popover-item" onClick={() => {setReminderHoursBefore(2); setShowReminderPicker(false);}}>2 hours before {reminderHoursBefore === 2 && '✓'}</div>
+                <div className="popover-item" onClick={() => {setReminderHoursBefore(3); setShowReminderPicker(false);}}>3 hours before {reminderHoursBefore === 3 && '✓'}</div>
+                <div className="popover-item" onClick={() => {setReminderHoursBefore(null); setShowReminderPicker(false);}}>None {reminderHoursBefore === null && '✓'}</div>
               </div>
             )}
           </div>

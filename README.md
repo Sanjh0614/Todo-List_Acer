@@ -8,6 +8,7 @@ An end-to-end full-stack, AI-powered productivity and time management applicatio
 - **Smart Extraction:** Paste raw text (e.g., emails, messages) and let the LLM automatically extract structured commitment data (type, title, due date, amount).
 - **AI Task Planning:** Generates step-by-step task breakdowns for larger commitments using LangGraph orchestration.
 - **Intervention Engine:** Delivers dynamic, context-aware reminders based on user psychology and root causes (e.g., time crunch, procrastination, low motivation). Styles include Deadline, Achievement, Consequence, and Streak.
+- **Automated Lifecycle & Notifications:** Precise event-driven scheduler triggers LangGraph AI to generate and send custom SMTP emails exactly 5 minutes after a task ends. Users can mark tasks complete directly from their inbox via "Magic Links", which securely purges the task from the local DB and Google Calendar.
 - **Recovery Plans:** AI generates actionable recovery steps when tasks fall behind or become high-risk.
 
 ### 2. Task & Commitment Management
@@ -38,8 +39,9 @@ An end-to-end full-stack, AI-powered productivity and time management applicatio
 - **Framework:** FastAPI (Python)
 - **Database:** Supabase (PostgreSQL)
 - **ORM:** SQLAlchemy with Pydantic for validation
-- **AI & LLM:** NVIDIA NIM API, OpenAI SDK, Google GenAI, LangGraph (Workflow orchestration)
-- **Background Tasks:** Celery + Redis
+- **AI & LLM:** NVIDIA NIM API (Llama 3.1 Nemotron 70B), OpenAI SDK, LangGraph (Agentic Workflow orchestration)
+- **Background Tasks:** APScheduler (Exact-Time Event Triggers, completely replaced continuous cron-polling)
+- **Integrations:** Google Calendar API, Google SMTP (Email Magic Links)
 - **Authentication:** Google OAuth + Supabase Auth
 
 ---
@@ -58,14 +60,15 @@ The backend is built as a robust, scalable FastAPI application utilizing a layer
 - **Pydantic Schemas:** Strict request/response validation ensuring data integrity across the API.
 
 ### 3. AI Engineering & Workflow
-- **LangGraph Integration (`ai_graph`):** We built a state-machine based AI orchestration layer. Endpoints like `/api/ai/extract`, `/plan`, `/recover`, and `/chat` invoke the `ai_graph` with specific user states and context.
+- **LangGraph Integration (`ai_graph` & `tools`):** State-machine based AI orchestration layer. Features dedicated LangChain `@tool`s (e.g., `generate_and_send_task_email`) allowing the AI to autonomously draft personalized messages and execute SMTP networking.
 - **LLM Clients:** Integrated `NVIDIA NIM` (using OpenAI-compatible SDK) for fast, structured JSON extraction and natural language planning. Fallback heuristic engines are in place if the API is unavailable.
 - **Intelligent Engines:** 
   - *Intervention Engine:* Maps task status and user profiles to personalized reminder styles.
   - *Priority & Risk Engines:* Analyzes task deadlines, estimated effort, and historical data to flag high-risk commitments.
 
-### 4. Background Processing
-- **Celery & Redis:** Configured for asynchronous task execution and beat scheduling (e.g., sending out scheduled reminders or aggregating daily analytics).
+### 4. Background Processing & Integrations
+- **APScheduler Event Engine:** Replaced heavy polling (Celery/Redis) with lightweight `AsyncIOScheduler`. Utilizes `DateTrigger` to inject single-execution jobs dynamically upon task creation/update (e.g., firing exactly 5 minutes after `end_time` to save cloud compute).
+- **Google Calendar Sync:** Full 2-way data persistence. Tasks created in the app sync to Google Calendar. Deleting/completing a task locally or via an Email Magic Link automatically purges the event from the user's Google Calendar.
 
 ---
 
@@ -130,14 +133,12 @@ npm install
 npm run dev
 ```
 
-### 3. Background Workers (Optional but Recommended)
-In a separate terminal (ensure Redis is running):
-```bash
-cd backend
-source venv/bin/activate
-celery -A app.workers.celery_app worker --loglevel=info
-celery -A app.workers.celery_app beat --loglevel=info
-```
+### 3. Deployment Considerations for Cloud Architecture
+For your cloud deployment partner, here are the critical infrastructure requirements:
+- **Compute:** The backend runs seamlessly on a single container (e.g., AWS ECS, EC2, or Railway). The background worker (APScheduler) runs inside the same FastAPI `lifespan` event, eliminating the need for a separate worker dyno/container.
+- **Database:** PostgreSQL (Supabase or AWS RDS).
+- **Environment Variables:** Must support secure injection of OAuth IDs, Supabase JWT secrets, NVIDIA API keys, and SMTP credentials.
+- **Networking:** Port 8000 exposed for backend, port 5173/80 for frontend. SMTP Port 587 must be open for outbound email triggers.
 
 ---
 

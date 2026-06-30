@@ -42,6 +42,13 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str = ""
     GOOGLE_REDIRECT_URI: str = "http://localhost:8000/auth/google/callback"
 
+    # ── SMTP Email (Automations) ──────────────────────────────────────
+    SMTP_SERVER: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USERNAME: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = ""
+
     # ── App Config ────────────────────────────────────────────────────
     FRONTEND_URL: str = "http://localhost:5173"
     SECRET_KEY: str = "dev-secret-key-change-in-production-min-32-chars"

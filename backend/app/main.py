@@ -41,6 +41,10 @@ async def lifespan(app: FastAPI):
     logger.info(f"   Environment: {settings.APP_ENV}")
     logger.info(f"   Database: {'PostgreSQL (Supabase)' if settings.is_postgres else 'SQLite (dev fallback)'}")
 
+    # Start the Email Notification Scheduler
+    from app.services.email_scheduler import start_scheduler
+    scheduler = start_scheduler()
+
     # Verify DB is reachable before accepting traffic
     if not verify_db_connection():
         logger.critical("❌ Database connection failed — check DATABASE_URL in .env")

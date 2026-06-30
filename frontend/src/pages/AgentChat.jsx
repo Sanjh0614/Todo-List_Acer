@@ -9,6 +9,7 @@
  *   - New thread button clears sessionStorage and resets the conversation
  */
 import { useState, useEffect, useRef, useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { aiChat } from '../services/api';
 
 // ── Tool call label map ───────────────────────────────────────────────────────
@@ -63,7 +64,13 @@ function ChatMessage({ msg }) {
       {!isUser && <div className="chat-avatar">🤖</div>}
       <div className="chat-bubble-wrap">
         <div className={`chat-bubble ${isUser ? 'user-bubble' : 'assistant-bubble'}`}>
-          {msg.content}
+          {isUser ? (
+            msg.content
+          ) : (
+            <div className="ai-rich-card">
+              <ReactMarkdown>{msg.content}</ReactMarkdown>
+            </div>
+          )}
         </div>
         {!isUser && <ToolPills tools={msg.toolsUsed} />}
       </div>
