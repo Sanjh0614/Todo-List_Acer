@@ -104,7 +104,13 @@ def google_callback(request: Request, db: Session = Depends(get_db)):
 
     state = request.query_params.get("state")
     flow = get_google_flow(state=state)
-    flow.fetch_token(authorization_response=str(request.url))
+    
+    # Fix for reverse proxies terminating SSL (forces https for the callback)
+    auth_response = str(request.url)
+    if auth_response.startswith("http://") and "localhost" not in auth_response and "127.0.0.1" not in auth_response:
+        auth_response = auth_response.replace("http://", "https://", 1)
+        
+    flow.fetch_token(authorization_response=auth_response)
     credentials = flow.credentials
 
     # Fetch Google user profile
