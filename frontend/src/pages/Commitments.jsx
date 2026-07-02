@@ -1,5 +1,72 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getCommitments, ingestCommitment, createManual, markDone, deleteCommitment } from '../services/api';
+import { getCommitments, ingestCommitment, createManual, markDone, deleteCommitment, createTask, aiPlan, aiRecover } from '../services/api';
+
+// ── AI Result Panel (shown inline below commitment card) ──────────────────────
+function AiResultPanel({ title, content, commitmentId, onClose }) {
+  const [dismissed, setDismissed] = useState([]);
+  const [added, setAdded]         = useState([]);
+  const [adding, setAdding]       = useState(null);
+
+  const lines = content
+    .split('\n')
+    .map(l => l.replace(/^[\d\-\*\.\s•]+/, '').trim())
+    .filter(l => l.length > 5);
+
+  const handleAddTask = async (line, idx) => {
+    setAdding(idx);
+    try {
+      await createTask({ title: line, commitment_id: commitmentId, priority: 'medium' });
+      setAdded(prev => [...prev, idx]);
+    } catch (e) { console.error('Failed to create task:', e); }
+    finally { setAdding(null); }
+  };
+
+  const handleAddAll = async () => {
+    for (let i = 0; i < lines.length; i++) {
+      if (!added.includes(i) && !dismissed.includes(i)) await handleAddTask(lines[i], i);
+    }
+  };
+
+  const pending = lines.filter((_, i) => !added.includes(i) && !dismissed.includes(i));
+
+  return (
+    <div className="ai-result-panel">
+      <div className="ai-result-header">
+        <span style={{ fontWeight: 600 }}>{title}</span>
+        <button className="modal-close" onClick={onClose}>✕</button>
+      </div>
+      <div className="ai-result-cards">
+        {lines.map((line, i) => {
+          if (dismissed.includes(i)) return null;
+          const isAdded = added.includes(i);
+          return (
+            <div key={i} className={`ai-task-card ${isAdded ? 'task-added' : ''}`}>
+              <span className="ai-task-icon">📌</span>
+              <span className="ai-task-text">{line}</span>
+              <div className="ai-task-actions">
+                {isAdded ? (
+                  <span className="task-added-badge">✅ Added</span>
+                ) : (
+                  <>
+                    <button className="btn btn-primary btn-xs" disabled={adding === i} onClick={() => handleAddTask(line, i)}>
+                      {adding === i ? '…' : '+ Task'}
+                    </button>
+                    <button className="btn btn-ghost btn-xs" onClick={() => setDismissed(p => [...p, i])}>✕</button>
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {pending.length > 0 && (
+        <button className="btn btn-primary" style={{ marginTop: 12, width: '100%' }} onClick={handleAddAll}>
+          ✅ Accept All {pending.length} Steps as Tasks
+        </button>
+      )}
+    </div>
+  );
+}
 
 function RiskBadge({ score }) {
   const level = score >= 0.7 ? 'high' : score >= 0.4 ? 'medium' : 'low';
@@ -18,16 +85,17 @@ function Commitments() {
   const [search, setSearch]     = useState('');
   const [filter, setFilter]     = useState('all');    // all | high | overdue
 
-  // AI ingest state
-  const [rawText, setRawText]   = useState('');
-  const [ingesting, setIngesting] = useState(false);
-  const [ingestErr, setIngestErr] = useState(null);
+  // AI ingest state removed as requested
 
   // Manual form state
   const today = new Date().toISOString().split('T')[0];
   const [form, setForm]         = useState({ title: '', type: 'task', description: '', due_date: today });
   const [saving, setSaving]     = useState(false);
   const [saveErr, setSaveErr]   = useState(null);
+
+  // AI panel state
+  const [aiPanel, setAiPanel]     = useState(null); // { commitmentId, title, content }
+  const [aiLoading, setAiLoading] = useState(null); // commitmentId currently loading
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -39,6 +107,16 @@ function Commitments() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+
+  // Sync with AI Agent actions
+  useEffect(() => {
+    const handleAiSync = () => {
+      console.log('AI action completed, syncing Commitments...');
+      load();
+    };
+    window.addEventListener('ai_action_completed', handleAiSync);
+    return () => window.removeEventListener('ai_action_completed', handleAiSync);
+  }, [load]);
 
   // ── Filters ─────────────────────────────────────────────────────
   const filtered = items.filter(c => {
@@ -61,19 +139,25 @@ function Commitments() {
     catch (e) { console.error(e); }
   };
 
-  // ── AI Ingest ────────────────────────────────────────────────────
-  const handleIngest = async (e) => {
-    e.preventDefault();
-    if (!rawText.trim()) return;
-    setIngesting(true); setIngestErr(null);
+  const handleAiPlan = async (c) => {
+    setAiLoading(c.id); setAiPanel(null);
     try {
-      const c = await ingestCommitment(rawText);
-      setItems(cs => [c, ...cs]);
-      setRawText('');
-      setTab('list');
-    } catch (e) { setIngestErr(e.message); }
-    finally { setIngesting(false); }
+      const result = await aiPlan(c.id);
+      setAiPanel({ commitmentId: c.id, title: `📋 Execution Plan: ${c.title}`, content: result.response });
+    } catch (e) { alert('AI Plan error: ' + e.message); }
+    finally { setAiLoading(null); }
   };
+
+  const handleAiRecover = async (c) => {
+    setAiLoading(c.id); setAiPanel(null);
+    try {
+      const result = await aiRecover(c.id);
+      setAiPanel({ commitmentId: c.id, title: `🔄 Recovery Plan: ${c.title}`, content: result.response });
+    } catch (e) { alert('AI Recovery error: ' + e.message); }
+    finally { setAiLoading(null); }
+  };
+
+  // ── AI Ingest Handler Removed ──
 
   // ── Manual Create ─────────────────────────────────────────────────
   const setF = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -101,35 +185,13 @@ function Commitments() {
       <header className="top-header">
         <h2>Commitments</h2>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className={`btn ${tab === 'ai' ? 'btn-primary' : 'btn-ghost'}`} onClick={() => setTab(tab === 'ai' ? 'list' : 'ai')}>
-            🤖 AI Ingest
-          </button>
           <button className={`btn ${tab === 'manual' ? 'btn-primary' : 'btn-ghost'}`} onClick={() => setTab(tab === 'manual' ? 'list' : 'manual')}>
             ✏️ Add Manual
           </button>
         </div>
       </header>
 
-      {/* ── AI Ingest Panel ── */}
-      {tab === 'ai' && (
-        <div className="panel">
-          <h3>🤖 AI Commitment Extraction</h3>
-          <p className="muted">Paste any text — email, message, note — and AI will extract the commitment details.</p>
-          <form onSubmit={handleIngest}>
-            <textarea
-              className="ai-input"
-              rows={5}
-              value={rawText}
-              onChange={e => setRawText(e.target.value)}
-              placeholder='e.g. "Hey, can you submit the Q3 report by next Friday? Also, the rent is due on the 30th."'
-            />
-            {ingestErr && <div className="error-banner">⚠️ {ingestErr}</div>}
-            <button type="submit" className="btn btn-primary" disabled={ingesting || !rawText.trim()}>
-              {ingesting ? '🤖 Extracting…' : '🚀 Extract & Save to Supabase'}
-            </button>
-          </form>
-        </div>
-      )}
+      {/* ── AI Ingest Panel Removed ── */}
 
       {/* ── Manual Add Panel ── */}
       {tab === 'manual' && (
@@ -200,21 +262,44 @@ function Commitments() {
               </div>
               {c.description && <p className="commitment-card-desc muted">{c.description}</p>}
               <div className="commitment-card-footer">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div className="commitment-card-meta">
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span className="muted" style={{ fontSize: '0.75rem' }}>Priority</span>
-                    <div className="priority-bar-wrap" style={{ width: 80 }}>
+                    <div className="priority-bar-wrap" style={{ width: 60 }}>
                       <div className="priority-bar" style={{ width: `${Math.min(c.priority_score || 0, 100)}%` }} />
                     </div>
-                    <span className="muted" style={{ fontSize: '0.75rem' }}>{Math.round(c.priority_score || 0)}</span>
                   </div>
-                  <div>{formatDue(c.days_until_due)}</div>
+                  <div style={{ fontSize: '0.85rem' }}>{formatDue(c.days_until_due)}</div>
                 </div>
                 <div className="commitment-card-actions">
-                  <button className="btn btn-ghost btn-sm" onClick={() => handleDone(c.id)} title="Mark done">✓ Done</button>
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    disabled={aiLoading === c.id}
+                    onClick={() => handleAiPlan(c)}
+                    title="Generate execution plan"
+                  >
+                    {aiLoading === c.id ? '⏳' : '🤖 Plan'}
+                  </button>
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    disabled={aiLoading === c.id}
+                    onClick={() => handleAiRecover(c)}
+                    title="Generate recovery plan"
+                  >
+                    {aiLoading === c.id ? '⏳' : '🔄 Recover'}
+                  </button>
+                  <button className="btn btn-primary btn-sm" onClick={() => handleDone(c.id)} title="Mark done">✓ Done</button>
                   <button className="btn btn-ghost btn-sm danger" onClick={() => handleDelete(c.id)} title="Delete">🗑</button>
                 </div>
               </div>
+              {aiPanel && aiPanel.commitmentId === c.id && (
+                <AiResultPanel
+                  title={aiPanel.title}
+                  content={aiPanel.content}
+                  commitmentId={c.id}
+                  onClose={() => setAiPanel(null)}
+                />
+              )}
             </div>
           ))}
         </div>

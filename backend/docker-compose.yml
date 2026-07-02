@@ -1,27 +1,56 @@
 version: "3.9"
+
 services:
   api:
-    build: .
-    ports: ["8000:8000"]
-    env_file: .env
-    depends_on: [redis]
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    image: 964043552184.dkr.ecr.ap-south-1.amazonaws.com/ai-productivity-backend:latest
+    container_name: productivity-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: unless-stopped
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
   worker:
-    build: .
-    env_file: .env
-    depends_on: [redis]
+    image: 964043552184.dkr.ecr.ap-south-1.amazonaws.com/ai-productivity-backend:latest
+    container_name: productivity-worker
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: unless-stopped
     command: celery -A app.workers.celery_app worker --loglevel=info
+
   beat:
-    build: .
-    env_file: .env
-    depends_on: [redis]
+    image: 964043552184.dkr.ecr.ap-south-1.amazonaws.com/ai-productivity-backend:latest
+    container_name: productivity-beat
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: unless-stopped
     command: celery -A app.workers.celery_app beat --loglevel=info
+
   redis:
     image: redis:7-alpine
-    ports: ["6379:6379"]
+    container_name: productivity-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
   flower:
-    build: .
-    ports: ["5555:5555"]
-    env_file: .env
-    depends_on: [redis]
+    image: 964043552184.dkr.ecr.ap-south-1.amazonaws.com/ai-productivity-backend:latest
+    container_name: productivity-flower
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: unless-stopped
     command: celery -A app.workers.celery_app flower --port=5555
+
+volumes:
+  redis_data:

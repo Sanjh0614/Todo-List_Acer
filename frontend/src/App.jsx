@@ -11,6 +11,7 @@ import Analytics from './pages/Analytics';
 import WeeklyPlanning from './pages/WeeklyPlanning';
 import WeeklyReview from './pages/WeeklyReview';
 import Backlog from './pages/Backlog';
+import Home from './pages/Home';
 
 function AppRoutes() {
   const { user, loading, logout } = useAuth();
@@ -23,10 +24,19 @@ function AppRoutes() {
     );
   }
 
-  if (!user) return <Login />;
+  if (!user) {
+    return (
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    );
+  }
 
   return (
     <Routes>
+      <Route path="/login" element={<Navigate to="/dashboard" replace />} />
       <Route path="/" element={<Layout user={user} onLogout={logout} />}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard"   element={<Dashboard />} />
@@ -35,8 +45,8 @@ function AppRoutes() {
         <Route path="focus"       element={<Focus />} />
         <Route path="analytics"   element={<Analytics />} />
         <Route path="weekly-planning" element={<WeeklyPlanning />} />
-        <Route path="weekly-review" element={<WeeklyReview />} />
-        <Route path="backlog" element={<Backlog />} />
+        <Route path="weekly-review"   element={<WeeklyReview />} />
+        <Route path="backlog"         element={<Backlog />} />
       </Route>
     </Routes>
   );

@@ -1,388 +1,144 @@
-/* Today.css - Specific styles for the Rituals & Board layout */
-
-.today-page {
-  display: flex;
-  height: 100%;
-  gap: var(--space-6);
-}
-
-/* Sidebar */
-.rituals-sidebar {
-  width: 220px;
-  flex-shrink: 0;
-  border-right: 1px solid var(--color-border);
-  padding-right: var(--space-4);
-}
-
-.rituals-sidebar h3 {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: var(--space-4);
-}
-
-.rituals-list {
-  list-style: none;
-}
-
-.rituals-list li {
-  padding: var(--space-2) var(--space-3);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  border-radius: var(--radius);
-  margin-bottom: var(--space-1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.rituals-list li:hover {
-  background: var(--color-surface);
-}
-
-.rituals-list li.active {
-  background: var(--color-surface-hover);
-  color: var(--color-text);
-  font-weight: 500;
-}
-
-.filter-dropdown label {
-  display: block;
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-2);
-}
-
-.filter-dropdown select {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  padding: var(--space-2);
-  border-radius: var(--radius);
-  width: 100%;
-}
-
-/* Board Area */
-.board-area {
-  flex: 1;
-  overflow-x: auto;
-  padding-right: var(--space-4);
-}
-
-.board-grid {
-  display: flex;
-  gap: var(--space-6);
-  height: 100%;
-}
-
-.board-column {
-  min-width: 280px;
-  max-width: 320px;
-  flex: 1;
-}
-
-.col-header {
-  margin-bottom: var(--space-4);
-}
-
-.col-header h4 {
-  margin: 0;
-  font-size: var(--text-lg);
-}
-
-.col-header .muted {
-  font-size: var(--text-sm);
-}
-
-.tasks-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.board-task-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  padding: var(--space-3);
-  border-radius: var(--radius);
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-}
-
-.board-task-card:hover {
-  border-color: var(--color-primary);
-}
-
-.task-info p {
-  margin: 0;
-  font-size: var(--text-sm);
-  font-weight: 500;
-}
-
-.channel-tag {
-  font-size: 10px;
-  color: var(--color-primary);
-  font-weight: 600;
-  align-self: flex-end;
-  margin-top: var(--space-2);
-}
-
-.add-task-btn {
-  width: 100%;
-  text-align: left;
-  justify-content: flex-start;
-  padding: var(--space-2) var(--space-3);
-  color: var(--color-text-muted);
-  background: var(--color-surface);
-  border: 1px dashed var(--color-border);
-}
-.add-task-btn:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
-/* Calendar Area */
-.calendar-area {
-  width: 250px;
-  flex-shrink: 0;
-  border-left: 1px solid var(--color-border);
-  padding-left: var(--space-4);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: var(--color-bg);
-  display: flex;
-  flex-direction: column;
-}
-
-.calendar-area.expanded {
-  width: 400px;
-}
-
-.calendar-area.full-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1000;
-  border-left: none;
-  padding: var(--space-8);
-}
-
-.cal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--space-6);
-}
-
-.cal-date {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.cal-date .day {
-  font-size: 10px;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-
-.cal-date .date {
-  font-size: var(--text-xl);
-  font-weight: 600;
-}
-
-.cal-grid {
-  display: flex;
-  flex-direction: column;
-}
-
-.cal-row {
-  display: flex;
-  height: 60px;
-  border-top: 1px solid var(--color-border);
+⨯吠摯祡挮獳ⴠ匠数楣楦⁣瑳汹獥映牯琠敨删瑩慵獬☠䈠慯摲氠祡畯⁴⼪਍਍琮摯祡瀭条⁥ൻ 搠獩汰祡›汦硥഻ 栠楥桧㩴ㄠ〰㬥਍†慧㩰瘠牡⴨猭慰散㘭㬩਍ൽഊ⼊‪楓敤慢⁲⼪਍爮瑩慵獬猭摩扥牡笠਍†楷瑤㩨㈠〲硰഻ 映敬⵸桳楲歮›㬰਍†潢摲牥爭杩瑨›瀱⁸潳楬⁤慶⡲ⴭ潣潬⵲潢摲牥㬩਍†慰摤湩ⵧ楲桧㩴瘠牡⴨猭慰散㐭㬩਍ൽഊ⸊楲畴污⵳楳敤慢⁲㍨笠਍†潦瑮猭穩㩥瘠牡⴨琭硥⵴獸㬩਍†潣潬㩲瘠牡⴨挭汯牯琭硥⵴畭整⥤഻ 琠硥⵴牴湡晳牯㩭甠灰牥慣敳഻ 氠瑥整⵲灳捡湩㩧〠㔮硰഻ 洠牡楧⵮潢瑴浯›慶⡲ⴭ灳捡ⵥ⤴഻紊਍਍爮瑩慵獬氭獩⁴ൻ 氠獩⵴瑳汹㩥渠湯㭥਍ൽഊ⸊楲畴污⵳楬瑳氠⁩ൻ 瀠摡楤杮›慶⡲ⴭ灳捡ⵥ⤲瘠牡⴨猭慰散㌭㬩਍†潣潬㩲瘠牡⴨挭汯牯琭硥⵴畭整⥤഻ 挠牵潳㩲瀠楯瑮牥഻ 戠牯敤⵲慲楤獵›慶⡲ⴭ慲楤獵㬩਍†慭杲湩戭瑯潴㩭瘠牡⴨猭慰散ㄭ㬩਍†楤灳慬㩹映敬㭸਍†番瑳晩⵹潣瑮湥㩴猠慰散戭瑥敷湥഻ 愠楬湧椭整獭›散瑮牥഻紊਍਍爮瑩慵獬氭獩⁴楬栺癯牥笠਍†慢正牧畯摮›慶⡲ⴭ潣潬⵲畳晲捡⥥഻紊਍਍爮瑩慵獬氭獩⁴楬愮瑣癩⁥ൻ 戠捡杫潲湵㩤瘠牡⴨挭汯牯猭牵慦散栭癯牥㬩਍†潣潬㩲瘠牡⴨挭汯牯琭硥⥴഻ 映湯⵴敷杩瑨›〵㬰਍ൽഊ⸊楦瑬牥搭潲摰睯⁮慬敢⁬ൻ 搠獩汰祡›汢捯㭫਍†潦瑮猭穩㩥瘠牡⴨琭硥⵴獸㬩਍†潣潬㩲瘠牡⴨挭汯牯琭硥⵴畭整⥤഻ 洠牡楧⵮潢瑴浯›慶⡲ⴭ灳捡ⵥ⤲഻紊਍਍昮汩整⵲牤灯潤湷猠汥捥⁴ൻ 戠捡杫潲湵㩤瘠牡⴨挭汯牯猭牵慦散㬩਍†潢摲牥›瀱⁸潳楬⁤慶⡲ⴭ潣潬⵲潢摲牥㬩਍†潣潬㩲瘠牡⴨挭汯牯琭硥⥴഻ 瀠摡楤杮›慶⡲ⴭ灳捡ⵥ⤲഻ 戠牯敤⵲慲楤獵›慶⡲ⴭ慲楤獵㬩਍†楷瑤㩨ㄠ〰㬥਍ൽഊ⼊‪潂牡⁤牁慥⨠യ⸊潢牡ⵤ牡慥笠਍†汦硥›㬱਍†癯牥汦睯砭›畡潴഻ 瀠摡楤杮爭杩瑨›慶⡲ⴭ灳捡ⵥ⤴഻紊਍਍戮慯摲札楲⁤ൻ 搠獩汰祡›汦硥഻ 朠灡›慶⡲ⴭ灳捡ⵥ⤶഻ 栠楥桧㩴ㄠ〰㬥਍ൽഊ⸊潢牡ⵤ潣畬湭笠਍†業⵮楷瑤㩨㈠〸硰഻ 洠硡眭摩桴›㈳瀰㭸਍†汦硥›㬱਍ൽഊ⸊潣⵬敨摡牥笠਍†慭杲湩戭瑯潴㩭瘠牡⴨猭慰散㐭㬩਍ൽഊ⸊潣⵬敨摡牥栠‴ൻ 洠牡楧㩮〠഻ 映湯⵴楳敺›慶⡲ⴭ整瑸氭⥧഻紊਍਍挮汯栭慥敤⁲洮瑵摥笠਍†潦瑮猭穩㩥瘠牡⴨琭硥⵴浳㬩਍ൽഊ⸊慴歳⵳潣瑮楡敮⁲ൻ 搠獩汰祡›汦硥഻ 映敬⵸楤敲瑣潩㩮挠汯浵㭮਍†慧㩰瘠牡⴨猭慰散㈭㬩਍ൽഊ⸊潢牡ⵤ慴歳挭牡⁤ൻ 戠捡杫潲湵㩤瘠牡⴨挭汯牯猭牵慦散㬩਍†潢摲牥›瀱⁸潳楬⁤慶⡲ⴭ潣潬⵲潢摲牥㬩਍†慰摤湩㩧瘠牡⴨猭慰散㌭㬩਍†潢摲牥爭摡畩㩳瘠牡⴨爭摡畩⥳഻ 搠獩汰祡›汦硥഻ 映敬⵸楤敲瑣潩㩮挠汯浵㭮਍†畣獲牯›潰湩整㭲਍ൽഊ⸊潢牡ⵤ慴歳挭牡㩤潨敶⁲ൻ 戠牯敤⵲潣潬㩲瘠牡⴨挭汯牯瀭楲慭祲㬩਍ൽഊ⸊慴歳椭普⁯⁰ൻ 洠牡楧㩮〠഻ 映湯⵴楳敺›慶⡲ⴭ整瑸猭⥭഻ 映湯⵴敷杩瑨›〵㬰਍ൽഊ⸊档湡敮⵬慴⁧ൻ 映湯⵴楳敺›〱硰഻ 挠汯牯›慶⡲ⴭ潣潬⵲牰浩牡⥹഻ 映湯⵴敷杩瑨›〶㬰਍†污杩⵮敳晬›汦硥攭摮഻ 洠牡楧⵮潴㩰瘠牡⴨猭慰散㈭㬩਍ൽഊ⸊摡ⵤ慴歳戭湴笠਍†楷瑤㩨ㄠ〰㬥਍†整瑸愭楬湧›敬瑦഻ 樠獵楴祦挭湯整瑮›汦硥猭慴瑲഻ 瀠摡楤杮›慶⡲ⴭ灳捡ⵥ⤲瘠牡⴨猭慰散㌭㬩਍†潣潬㩲瘠牡⴨挭汯牯琭硥⵴畭整⥤഻ 戠捡杫潲湵㩤瘠牡⴨挭汯牯猭牵慦散㬩਍†潢摲牥›瀱⁸慤桳摥瘠牡⴨挭汯牯戭牯敤⥲഻紊਍愮摤琭獡⵫瑢㩮潨敶⁲ൻ 戠牯敤⵲潣潬㩲瘠牡⴨挭汯牯瀭楲慭祲㬩਍†潣潬㩲瘠牡⴨挭汯牯瀭楲慭祲㬩਍ൽഊ⼊‪慃敬摮牡䄠敲⁡⼪਍挮污湥慤⵲牡慥笠਍†楷瑤㩨㈠〵硰഻ 映敬⵸桳楲歮›㬰਍†潢摲牥氭晥㩴ㄠ硰猠汯摩瘠牡⴨挭汯牯戭牯敤⥲഻ 瀠摡楤杮氭晥㩴瘠牡⴨猭慰散㐭㬩਍†牴湡楳楴湯›楷瑤⁨⸰猳挠扵捩戭穥敩⡲⸰ⰴ〠‬⸰ⰲㄠ㬩਍†慢正牧畯摮›慶⡲ⴭ潣潬⵲杢㬩਍†楤灳慬㩹映敬㭸਍†汦硥搭物捥楴湯›潣畬湭഻紊਍਍挮污湥慤⵲牡慥攮灸湡敤⁤ൻ 眠摩桴›〴瀰㭸਍ൽഊ⸊慣敬摮牡愭敲⹡畦汬猭牣敥⁮ൻ 瀠獯瑩潩㩮映硩摥഻ 琠灯›㬰਍†敬瑦›㬰਍†楲桧㩴〠഻ 戠瑯潴㩭〠഻ 眠摩桴›〱瘰㭷਍†敨杩瑨›〱瘰㭨਍†⵺湩敤㩸ㄠ〰㬰਍†潢摲牥氭晥㩴渠湯㭥਍†慰摤湩㩧瘠牡⴨猭慰散㠭㬩਍ൽഊ⸊慣⵬敨摡牥笠਍†楤灳慬㩹映敬㭸਍†番瑳晩⵹潣瑮湥㩴猠慰散戭瑥敷湥഻ 愠楬湧椭整獭›汦硥猭慴瑲഻ 洠牡楧⵮潢瑴浯›慶⡲ⴭ灳捡ⵥ⤶഻紊਍਍挮污搭瑡⁥ൻ 搠獩汰祡›汦硥഻ 映敬⵸楤敲瑣潩㩮挠汯浵㭮਍†污杩⵮瑩浥㩳挠湥整㭲਍ൽഊ⸊慣⵬慤整⸠慤⁹ൻ 映湯⵴楳敺›〱硰഻ 琠硥⵴牴湡晳牯㩭甠灰牥慣敳഻ 挠汯牯›慶⡲ⴭ潣潬⵲整瑸洭瑵摥㬩਍ൽഊ⸊慣⵬慤整⸠慤整笠਍†潦瑮猭穩㩥瘠牡⴨琭硥⵴汸㬩਍†潦瑮眭楥桧㩴㘠〰഻紊਍਍挮污札楲⁤ൻ 搠獩汰祡›汦硥഻ 映敬⵸楤敲瑣潩㩮挠汯浵㭮਍ൽഊ⸊慣⵬潲⁷ൻ 搠獩汰祡›汦硥഻ 栠楥桧㩴㘠瀰㭸਍†潢摲牥琭灯›瀱⁸潳楬⁤慶⡲ⴭ潣潬⵲潢摲牥㬩਍†潰楳楴湯›敲慬楴敶഻紊਍਍挮污爭睯⸠楴敭笠਍†潦瑮猭穩㩥ㄠ瀰㭸਍†潣潬㩲瘠牡⴨挭汯牯琭硥⵴畭整⥤഻ 眠摩桴›〴硰഻ 瀠獯瑩潩㩮愠獢汯瑵㭥਍†潴㩰ⴠ瀸㭸਍†慢正牧畯摮›慶⡲ⴭ潣潬⵲杢㬩਍†慰摤湩ⵧ楲桧㩴㐠硰഻紊਍਍挮污猭潬⁴ൻ 映敬㩸ㄠ഻ 洠牡楧⵮敬瑦›〴硰഻ 戠牯敤⵲敬瑦›瀱⁸潳楬⁤慶⡲ⴭ潣潬⵲潢摲牥㬩਍ൽഊ⼊‪楒畴污⁳楖睥⁳⼪਍献畨摴睯⵮楶睥‬栮杩汨杩瑨⵳楶睥笠਍†慭⵸楷瑤㩨㘠〰硰഻ 洠牡楧㩮〠愠瑵㭯਍†慰摤湩ⵧ潴㩰瘠牡⴨猭慰散㠭㬩਍ൽഊ⸊楨桧楬桧⵴瑩浥笠਍†慭杲湩戭瑯潴㩭瘠牡⴨猭慰散㠭㬩਍ൽഊ⸊楨桧楬桧⵴瑩浥栠‴ൻ 映湯⵴楳敺›慶⡲ⴭ整瑸砭⥬഻ 洠牡楧⵮潢瑴浯›慶⡲ⴭ灳捡ⵥ⤴഻ 搠獩汰祡›汦硥഻ 愠楬湧椭整獭›散瑮牥഻ 朠灡›慶⡲ⴭ灳捡ⵥ⤲഻紊਍਍栮杩汨杩瑨椭整⁭⁰ൻ 挠汯牯›慶⡲ⴭ潣潬⵲整瑸洭瑵摥㬩਍†楬敮栭楥桧㩴ㄠ㘮഻ 眠楨整猭慰散›牰ⵥ牷灡഻紊਍਍⨯䘠汵⁬潍瑮⁨楖睥匠祴敬⁳⼪਍洮湯桴瘭敩⵷潣瑮楡敮⁲ൻ 搠獩汰祡›汦硥഻ 映敬⵸楤敲瑣潩㩮挠汯浵㭮਍†敨杩瑨›〱┰഻紊਍਍洮湯桴栭慥敤⵲慮⁶ൻ 搠獩汰祡›汦硥഻ 樠獵楴祦挭湯整瑮›汦硥猭慴瑲഻ 愠楬湧椭整獭›散瑮牥഻ 洠牡楧⵮潢瑴浯›慶⡲ⴭ灳捡ⵥ⤶഻紊਍਍洮湯桴栭慥敤⵲慮⁶㉨笠਍†潦瑮猭穩㩥瘠牡⴨琭硥⵴砲⥬഻ 映湯⵴敷杩瑨›〵㬰਍†慭杲湩›㬰਍†慭杲湩氭晥㩴瘠牡⴨猭慰散㐭㬩਍†潣潬㩲瘠牡⴨挭汯牯琭硥⥴഻紊਍਍洮湯桴札楲ⵤ敨摡牥笠਍†楤灳慬㩹朠楲㭤਍†牧摩琭浥汰瑡ⵥ潣畬湭㩳爠灥慥⡴ⰷㄠ牦㬩਍†整瑸愭楬湧›散瑮牥഻ 映湯⵴楳敺›ㄱ硰഻ 映湯⵴敷杩瑨›〶㬰਍†潣潬㩲瘠牡⴨挭汯牯琭硥⵴畭整⥤഻ 瀠摡楤杮戭瑯潴㩭瘠牡⴨猭慰散㈭㬩਍†潢摲牥戭瑯潴㩭ㄠ硰猠汯摩瘠牡⴨挭汯牯戭牯敤⥲഻紊਍਍洮湯桴札楲⁤ൻ 搠獩汰祡›牧摩഻ 朠楲ⵤ整灭慬整挭汯浵獮›敲数瑡㜨‬昱⥲഻ 朠楲ⵤ畡潴爭睯㩳洠湩慭⡸〱瀰ⱸㄠ牦㬩਍†汦硥›㬱਍†潢摲牥氭晥㩴ㄠ硰猠汯摩瘠牡⴨挭汯牯戭牯敤⥲഻ 戠牯敤⵲潴㩰ㄠ硰猠汯摩瘠牡⴨挭汯牯戭牯敤⥲഻ 戠捡杫潲湵㩤瘠牡⴨挭汯牯戭⥧഻紊਍਍洮湯桴札楲ⵤ散汬笠਍†潢摲牥爭杩瑨›瀱⁸潳楬⁤慶⡲ⴭ潣潬⵲潢摲牥㬩਍†潢摲牥戭瑯潴㩭ㄠ硰猠汯摩瘠牡⴨挭汯牯戭牯敤⥲഻ 瀠摡楤杮›瀴㭸਍†楤灳慬㩹映敬㭸਍†汦硥搭物捥楴湯›潣畬湭഻ 朠灡›瀲㭸਍†慢正牧畯摮›慶⡲ⴭ潣潬⵲畳晲捡⥥഻紊਍਍洮湯桴札楲ⵤ散汬攮灭祴笠਍†慢正牧畯摮›慶⡲ⴭ潣潬⵲杢㬩਍ൽഊ⸊潭瑮⵨牧摩挭汥⁬挮汥⵬慤整笠਍†整瑸愭楬湧›散瑮牥഻ 映湯⵴楳敺›㈱硰഻ 挠汯牯›慶⡲ⴭ潣潬⵲整瑸洭瑵摥㬩਍†潦瑮眭楥桧㩴㔠〰഻ 洠牡楧⵮潢瑴浯›瀴㭸਍†慭杲湩琭灯›瀴㭸਍ൽഊ⸊潭瑮⵨牧摩挭汥⹬潴慤⁹搮瑡ⵥ慢杤⁥ൻ 戠捡杫潲湵㩤瘠牡⴨挭汯牯瀭楲慭祲㬩਍†潣潬㩲⌠晦㭦਍†慰摤湩㩧㈠硰㘠硰഻ 戠牯敤⵲慲楤獵›〵㬥਍ൽഊ⸊散汬攭敶瑮⁳ൻ 搠獩汰祡›汦硥഻ 映敬⵸楤敲瑣潩㩮挠汯浵㭮਍†慧㩰㈠硰഻ 漠敶晲潬⵷㩹愠瑵㭯਍†慭⵸敨杩瑨›慣捬ㄨ〰‥‭㐲硰㬩਍ൽഊ⸊潭瑮⵨癥湥⵴档灩笠਍†慢正牧畯摮›慶⡲ⴭ潣潬⵲杢㬩਍†潢摲牥爭摡畩㩳㐠硰഻ 瀠摡楤杮›瀲⁸瀶㭸਍†潦瑮猭穩㩥ㄠ瀱㭸਍†潣潬㩲瘠牡⴨挭汯牯琭硥⥴഻ 眠楨整猭慰散›潮牷灡഻ 漠敶晲潬㩷栠摩敤㭮਍†整瑸漭敶晲潬㩷攠汬灩楳㭳਍†楤灳慬㩹映敬㭸਍†污杩⵮瑩浥㩳挠湥整㭲਍†慧㩰㐠硰഻紊਍਍洮湯桴攭敶瑮挭楨⹰污⵬慤⁹ൻ 戠捡杫潲湵㩤瘠牡⴨挭汯牯瀭楲慭祲㬩਍†潣潬㩲⌠晦㭦਍ൽഊ⸊潭瑮⵨癥⵴潤⁴ൻ 挠汯牯›慶⡲ⴭ潣潬⵲牰浩牡⥹഻ 映湯⵴楳敺›瀸㭸਍ൽഊ⸊潭瑮⵨癥⵴楴汴⁥ൻ 漠敶晲潬㩷栠摩敤㭮਍†整瑸漭敶晲潬㩷攠汬灩楳㭳਍ൽഊ⼊‪慔歳䴠摯污⨠യ⸊慴歳洭摯污漭敶汲祡笠਍†潰楳楴湯›楦數㭤਍†潴㩰〠഻ 氠晥㩴〠഻ 眠摩桴›〱瘰㭷਍†敨杩瑨›〱瘰㭨਍†慢正牧畯摮›杲慢〨‬ⰰ〠‬⸰⤵഻ 搠獩汰祡›汦硥഻ 愠楬湧椭整獭›散瑮牥഻ 樠獵楴祦挭湯整瑮›散瑮牥഻ 稠椭摮硥›〱〰഻紊਍਍琮獡⵫潭慤⵬潣瑮湥⁴ൻ 戠捡杫潲湵㩤瘠牡⴨挭汯牯戭⥧഻ 瀠摡楤杮›慶⡲ⴭ灳捡ⵥ⤶഻ 戠牯敤⵲慲楤獵›㈱硰഻ 眠摩桴›〹㬥਍†慭⵸楷瑤㩨㘠〰硰഻ 戠硯猭慨潤㩷〠ㄠ瀰⁸㔲硰爠执⡡ⰰⰰⰰ⸰⤵഻ 戠牯敤㩲ㄠ硰猠汯摩瘠牡⴨挭汯牯戭牯敤⥲഻紊਍਍琮獡⵫潭慤⵬潣瑮湥⁴愮摤琭獡⵫慢⁲ൻ 洠牡楧㩮〠※⨯传敶牲摩⁥湡⁹慬潹瑵洠牡楧獮映潲⁭桴⁥摡⁤慴歳戠牡⨠യ紊਍.generate-btn {
   position: relative;
+  overflow: hidden;
 }
 
-.cal-row .time {
-  font-size: 10px;
-  color: var(--color-text-muted);
-  width: 40px;
+.generate-btn::after {
+  content: '';
   position: absolute;
-  top: -8px;
-  background: var(--color-bg);
-  padding-right: 4px;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite linear;
+  pointer-events: none;
 }
 
-.cal-slot {
-  flex: 1;
-  margin-left: 40px;
-  border-left: 1px solid var(--color-border);
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
 }
 
-/* Rituals Views */
-.shutdown-view, .highlights-view {
-  max-width: 600px;
-  margin: 0 auto;
-  padding-top: var(--space-8);
-}
-
-.highlight-item {
-  margin-bottom: var(--space-8);
-}
-
-.highlight-item h4 {
-  font-size: var(--text-xl);
-  margin-bottom: var(--space-4);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.highlight-item p {
-  color: var(--color-text-muted);
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-
-/* Full Month View Styles */
-.month-view-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.month-header-nav {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: var(--space-6);
-}
-
-.month-header-nav h2 {
-  font-size: var(--text-2xl);
-  font-weight: 500;
-  margin: 0;
-  margin-left: var(--space-4);
-  color: var(--color-text);
-}
-
-.month-grid-header {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.month-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: minmax(100px, 1fr);
-  flex: 1;
-  border-left: 1px solid var(--color-border);
-  border-top: 1px solid var(--color-border);
-  background: var(--color-bg);
-}
-
-.month-grid-cell {
-  border-right: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-  padding: 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  background: var(--color-surface);
-}
-
-.month-grid-cell.empty {
-  background: var(--color-bg);
-}
-
-.month-grid-cell .cell-date {
-  text-align: center;
-  font-size: 12px;
-  color: var(--color-text-muted);
-  font-weight: 500;
-  margin-bottom: 4px;
-  margin-top: 4px;
-}
-
-.month-grid-cell.today .date-badge {
-  background: var(--color-primary);
-  color: #fff;
-  padding: 2px 6px;
+.pulsing-circle {
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
   border-radius: 50%;
+  animation: pulse 1.5s infinite ease-in-out;
 }
 
-.cell-events {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  overflow-y: auto;
-  max-height: calc(100% - 24px);
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+  70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+  100% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
 }
 
-.month-event-chip {
-  background: var(--color-bg);
-  border-radius: 4px;
-  padding: 2px 6px;
-  font-size: 11px;
-  color: var(--color-text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.month-event-chip.all-day {
-  background: var(--color-primary);
-  color: #fff;
-}
-
-.month-evt-dot {
-  color: var(--color-primary);
-  font-size: 8px;
-}
-
-.month-evt-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Task Modal */
-.task-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+/* AI Loader */
+.ai-loader-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
 }
 
-.task-modal-content {
-  background: var(--color-bg);
-  padding: var(--space-6);
-  border-radius: 12px;
-  width: 90%;
-  max-width: 600px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-  border: 1px solid var(--color-border);
+.ai-loader-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 4px solid transparent;
+  border-top-color: var(--color-primary);
+  border-right-color: #10B981;
+  border-bottom-color: #F59E0B;
+  border-left-color: #8B5CF6;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
 }
 
-.task-modal-content .add-task-bar {
-  margin: 0; /* Override any layout margins from the add task bar */
+.ai-loader-ring::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border: 4px solid transparent;
+  border-top-color: rgba(99, 102, 241, 0.5);
+  border-bottom-color: rgba(16, 185, 129, 0.5);
+  border-radius: 50%;
+  animation: spin-reverse 1.5s linear infinite;
+}
+
+.loading-gradient-text {
+  background: linear-gradient(90deg, #6366F1, #8B5CF6, #EC4899);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Results Fade In */
+.fade-in {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Subcard interactions handled in inline styles (React), but we can add cursor styles here */
+.subcard {
+  position: relative;
+  overflow: hidden;
+}
+
+.subcard::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.subcard:hover::after {
+  opacity: 1;
 }

@@ -1,0 +1,83 @@
+# Project Requirements
+
+This project consists of a FastAPI backend and a React (Vite) frontend. To run this project locally or deploy it to a custom engine/server, you must satisfy both the system-level requirements and the specific language dependencies for both environments.
+
+## 1. System Requirements
+
+*   **Python**: >= 3.9 (Required for the FastAPI backend)
+*   **Node.js**: >= 18.x (Required for the Vite/React frontend)
+*   **Redis**: (Required as a message broker for Celery background tasks)
+*   **PostgreSQL / Supabase**: The database is powered by Supabase (PostgreSQL). You can use the Supabase cloud platform or self-host it.
+
+## 2. External Services & APIs
+
+To run the application properly, you must configure the following services and provide their credentials via environment variables (see `backend/.env.example`):
+
+*   **Supabase**: Provides PostgreSQL database, Authentication, and Realtime subscriptions.
+*   **NVIDIA NIM API**: Provides the LLM backend (e.g., `nvidia/llama-3.1-nemotron-70b-instruct`) for AI features.
+*   **Google Cloud Console**: Required for "Sign in with Google" and Google Calendar sync functionality. You need a Google Client ID and Secret.
+
+---
+
+## 3. Backend Dependencies (Python)
+
+The backend is built with FastAPI. If you are setting up the Python engine, you need the following libraries (typically installed via `pip install -r backend/requirements.txt`):
+
+### Web Framework & Server
+*   `fastapi`
+*   `uvicorn[standard]`
+*   `python-multipart`
+
+### Database & ORM
+*   `sqlalchemy`
+*   `psycopg2-binary`
+*   `asyncpg`
+*   `alembic`
+*   `supabase`
+*   `realtime`
+
+### Background Tasks & Queues
+*   `celery`
+*   `redis`
+
+### AI & Integrations
+*   `openai`
+*   `langgraph`
+*   `google-genai`
+
+### Google OAuth & Calendar
+*   `google-api-python-client`
+*   `google-auth-httplib2`
+*   `google-auth-oauthlib`
+
+### Utilities & Security
+*   `pydantic`
+*   `pydantic-settings`
+*   `python-jose[cryptography]`
+*   `loguru`
+*   `tenacity`
+*   `requests`
+
+---
+
+## 4. Frontend Dependencies (Node.js)
+
+The frontend is a React SPA built with Vite. If you are setting up the Node engine, you need the following NPM packages (typically installed via `npm install` in the `frontend/` directory):
+
+### Core Framework & Build Tool
+*   `react` (^19.2.7)
+*   `react-dom` (^19.2.7)
+*   `vite` (^6.0.0)
+
+### Routing & State
+*   `react-router-dom` (^7.18.0)
+*   `@supabase/supabase-js` (^2.108.2)
+
+### UI, Charts & Icons
+*   `chart.js` (^4.5.1)
+*   `react-chartjs-2` (^5.3.1)
+*   `lucide-react` (^1.21.0)
+
+### Utilities
+*   `date-fns` (^4.4.0)
+*   `oxlint` (Linter)

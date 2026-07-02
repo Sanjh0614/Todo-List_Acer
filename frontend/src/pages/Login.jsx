@@ -24,8 +24,9 @@ function Login() {
         if (result.hasSession) {
            setSuccessMsg('Account created! Connecting your Google Calendar...');
            setTimeout(() => {
-             window.location.href = `http://localhost:8000/auth/google/login?token=${result.token}`;
-           }, 1000);
+            const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+            window.location.href = `${baseUrl}/auth/google/login?token=${result.token}`;
+          }, 1500);
         } else {
            setSuccessMsg('Account created! Please check your email to sign in.');
            setIsSignUp(false);
@@ -42,7 +43,8 @@ function Login() {
 
   const handleGoogleLogin = () => {
     // Keep the original backend flow for Google OAuth
-    window.location.href = 'http://localhost:8000/auth/google/login';
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    window.location.href = `${baseUrl}/auth/google/login`;
   };
 
   return (

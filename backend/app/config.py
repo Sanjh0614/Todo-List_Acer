@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     # Format: postgresql+psycopg2://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres
     DATABASE_URL: str = "sqlite:///./dev.db"
 
+    # Async direct connection for LangGraph PostgresSaver (port 5432, NOT pooler)
+    ASYNC_DATABASE_URL: str = ""
+
     # Connection Pool (PostgreSQL only)
     DB_POOL_SIZE: int = 10
     DB_MAX_OVERFLOW: int = 20
@@ -29,6 +32,7 @@ class Settings(BaseSettings):
 
     # ── Gemini LLM ────────────────────────────────────────────────────
     GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.0-flash"
 
     # ── Redis (Celery Broker) ─────────────────────────────────────────
     REDIS_URL: str = "redis://localhost:6379/0"
@@ -37,6 +41,13 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
     GOOGLE_REDIRECT_URI: str = "http://localhost:8000/auth/google/callback"
+
+    # ── SMTP Email (Automations) ──────────────────────────────────────
+    SMTP_SERVER: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USERNAME: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = ""
 
     # ── App Config ────────────────────────────────────────────────────
     FRONTEND_URL: str = "http://localhost:5173"

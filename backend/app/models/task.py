@@ -41,6 +41,7 @@ class Task(Base):
     planned_date: Mapped[Date] = mapped_column(Date, nullable=True, index=True)
     start_time: Mapped[Time] = mapped_column(Time, nullable=True)
     end_time: Mapped[Time] = mapped_column(Time, nullable=True)
+    reminder_hours_before: Mapped[int] = mapped_column(Integer, nullable=True)
 
     # ── Time Tracking ──────────────────────────────────────────────────
     estimated_minutes: Mapped[int] = mapped_column(Integer, default=25)
